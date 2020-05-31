@@ -5,18 +5,18 @@ class Text {
         try {
             var conneciton = pool.getPool()
             var type = data.type || 0
-            if(type == 0){
+            if (type == 0) {
                 let query = {
                     text: 'INSERT INTO text(subURL,path,title,authorID) VALUES($1, $2, $3, $4)',
                     values: [data.subURL, data.path, data.title, data.authorID]
                 }
-            } else if(type == 1){
+            } else if (type == 1) {
                 let query = {
                     text: 'INSERT INTO text(subURL,path,userID) VALUES($1, $2, $3)',
                     values: [data.subURL, data.path, data.userID]
                 }
             }
-           
+
             text = await conneciton.query(query)
 
             if (text.rowCount != 0) {
@@ -29,12 +29,12 @@ class Text {
         }
     }
 
-    get = (data) => {
+    get = async (data) => {
         try {
             var conneciton = pool.getPool()
             const query = {
                 text: 'SELECT * FROM text WHERE textID = $1',
-                values: [data.textID],
+                values: [data.textID]
             }
             text = await conneciton.query(query)
             return { status: true, data: text.rows }
@@ -43,14 +43,14 @@ class Text {
         }
     }
 
-    list = (data) => {
+    list = async (data) => {
         /**
          * TODO : Page yapısı
          */
         try {
             var conneciton = pool.getPool()
             const query = {
-                text: 'SELECT * FROM text',
+                text: 'SELECT * FROM text'
             }
             text = await conneciton.query(query)
             return { status: true, data: text.rows }
@@ -58,4 +58,8 @@ class Text {
             return { status: false, data: [] }
         }
     }
+}
+
+module.exports = {
+    Text
 }
