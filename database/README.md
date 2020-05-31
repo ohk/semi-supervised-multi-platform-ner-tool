@@ -98,6 +98,31 @@ Return:
 
 ---
 
+## Word
+
+| Function Name | Description  |
+| ------------- | :----------: |
+| add           | Add the word |
+
+### add
+
+> IN PROCESS / PAGINATION
+
+```
+Params: {
+    word:
+    textID:
+}
+Description: Add the new word to the database
+Return:
+{
+    status: Boolean,
+    message: Status message
+}
+```
+
+---
+
 ## User
 
 | Function Name |                 Description                  |
