@@ -47,6 +47,55 @@ Return:
 | add           |   Add the author    |
 | list          |   List the texts    |
 
+### add
+
+```
+Params: {
+    subURL: from which page was it crawl?
+    path: Where is it held on disk
+    userID: By which user. If by the system, the default value is assigned.
+    title: If exist
+    authorID: If it was crawled by the system, which author's article was crawled.
+    type: Is this article added by the user or by the system.(0 = system - default, 1= user )
+}
+Description: Add new text
+Return:
+{
+    status: Boolean,
+    message: Status message
+}
+```
+
+### get
+
+```
+Params: {
+    textID: text id
+}
+Description: Returns information about that textID.
+Return:
+{
+    status: Boolean,
+    data: INFO
+}
+```
+
+### list
+
+> IN PROCESS / PAGINATION
+
+```
+Params: {
+    //TODO
+}
+Description: Create the log with login credentials
+Return:
+{
+    status: Boolean,
+    data: INFO
+}
+```
+
 ---
 
 ## User
