@@ -223,3 +223,111 @@ Description: Validate user
 THIS FUNCTION IS NOT COMPLETE. PLEASE CHECK LATER
 }
 ```
+
+---
+
+## TAG
+
+| Function Name |   Description    |
+| ------------- | :--------------: |
+| addTagType    | Add new tag type |
+| addRecord     |  Add new record  |
+
+### addTagType
+
+```
+Params: {
+    tagname:
+    color:
+}
+Description: Add the new tag type to db
+Return:
+{
+    status: Boolean,
+    message: Status message
+}
+```
+
+### addRecord
+
+```
+Params: {
+    userID:
+    tags: [ { tagTypeID, wordID } ]
+}
+Description: Add the new record to db
+Return:
+{
+    status: Boolean,
+    message: Status message
+}
+```
+
+---
+
+## Settings
+
+| Function Name |    Description    |
+| ------------- | :---------------: |
+| add           |  Add new setting  |
+| get           | Gets all settings |
+| update        |  Update Setting   |
+| delete        |  Delete Setting   |
+
+### add
+
+```
+Params: {
+    key: Settings key
+    value: Settings value
+}
+Description: Add the new settings to db
+Return:
+{
+    status: Boolean,
+    message: Status message
+}
+```
+
+### get
+
+```
+Params: {}
+Description: List all settings
+Return:
+{
+    status: Boolean,
+    data: INFO
+}
+```
+
+### update
+
+```
+Params: {
+    key: Settings key
+    value: Settings value
+}
+Description: Update settings
+Return:
+{
+    status: Boolean,
+    message: Status message
+}
+```
+
+### deleteS
+
+```
+Params: {
+    key: Settings key
+}
+Description: Delete the settings
+Return:
+{
+    status: Boolean,
+    message: Status message
+}
+```
+
+---
