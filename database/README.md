@@ -2,6 +2,31 @@
 
 ---
 
+# ALL FUNCTIONS
+
+| Class    | Function Name |                 Description                  |
+| -------- | :-----------: | :------------------------------------------: |
+| Author   |      get      |             Get the all authors              |
+| Author   |      add      |                Add the author                |
+| Text     |      get      |             Get the all authors              |
+| Text     |      add      |                Add the author                |
+| Text     |     list      |                List the texts                |
+| Word     |      add      |                 Add the word                 |
+| User     |      log      |    Create the log with login credentials     |
+| User     |   register    |               Create new user                |
+| User     |     login     |        Login: Check login credentials        |
+| User     |    forgot     | Forgot Password function. It send reset code |
+| User     |     reset     | Reset Password function. It check reset code |
+| User     |   validate    |           Validate User with Email           |
+| Tag      |  addTagType   |               Add new tag type               |
+| Tag      |   addRecord   |                Add new record                |
+| Settings |      add      |               Add new setting                |
+| Settings |      get      |              Gets all settings               |
+| Settings |    update     |                Update Setting                |
+| Settings |    delete     |                Delete Setting                |
+
+---
+
 ## Author
 
 | Function Name |     Description     |
