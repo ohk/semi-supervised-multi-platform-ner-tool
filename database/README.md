@@ -4,28 +4,184 @@
 
 # ALL FUNCTIONS
 
-| Class    | Function Name |                 Description                  |
-| -------- | :-----------: | :------------------------------------------: |
-| Author   |      get      |             Get the all authors              |
-| Author   |      add      |                Add the author                |
-| Text     |      get      |             Get the all authors              |
-| Text     |      add      |                Add the author                |
-| Text     |     list      |                List the texts                |
-| Word     |      add      |                 Add the word                 |
-| User     |      log      |    Create the log with login credentials     |
-| User     |   register    |               Create new user                |
-| User     |     login     |        Login: Check login credentials        |
-| User     |    forgot     | Forgot Password function. It send reset code |
-| User     |     reset     | Reset Password function. It check reset code |
-| User     |   validate    |           Validate User with Email           |
-| Tag      |  addTagType   |               Add new tag type               |
-| Tag      |   addRecord   |                Add new record                |
-| Settings |      add      |               Add new setting                |
-| Settings |      get      |              Gets all settings               |
-| Settings |    update     |                Update Setting                |
-| Settings |    delete     |                Delete Setting                |
+| Class    |    Function Name    |                                         Description                                          |
+| -------- | :-----------------: | :------------------------------------------------------------------------------------------: |
+| Train    |   getLastTrainID    |                                    It gives last train id                                    |
+| Train    | addTrainWordRecord  |                                        ?? Trigger ??                                         |
+| Train    |  addTrainExcluded   |  It adds a new situation to be deleted from the data it will use while training the model.   |
+| Train    | deleteTrainExcluded | It deletes a new situation to be deleted from the data it will use while training the model. |
+| Train    | updateTrainExcluded | It updates a new situation to be deleted from the data it will use while training the model. |
+| Train    |  getTrainExcluded   |          It list to be deleted from the data it will use while training the model.           |
+| Train    |   getTrainRecord    |                                     Lists trained models                                     |
+| Train    |  deleteTrainRecord  |                                  Deletes the trained model                                   |
+| Train    |   addTrainRecord    |                                    Adds the trained model                                    |
+| Train    |  updateTrainRecord  |                                Updates the trained model path                                |
+| Author   |         get         |                                     Get the all authors                                      |
+| Author   |         add         |                                        Add the author                                        |
+| Text     |         get         |                                     Get the all authors                                      |
+| Text     |         add         |                                        Add the author                                        |
+| Text     |        list         |                                        List the texts                                        |
+| Word     |         add         |                                         Add the word                                         |
+| User     |         log         |                            Create the log with login credentials                             |
+| User     |      register       |                                       Create new user                                        |
+| User     |        login        |                                Login: Check login credentials                                |
+| User     |       forgot        |                         Forgot Password function. It send reset code                         |
+| User     |        reset        |                         Reset Password function. It check reset code                         |
+| User     |      validate       |                                   Validate User with Email                                   |
+| Tag      |     addTagType      |                                       Add new tag type                                       |
+| Tag      |      addRecord      |                                        Add new record                                        |
+| Settings |         add         |                                       Add new setting                                        |
+| Settings |         get         |                                      Gets all settings                                       |
+| Settings |       update        |                                        Update Setting                                        |
+| Settings |       delete        |                                        Delete Setting                                        |
 
 ---
+
+## Train
+
+| Function Name       |                                         Description                                          |
+| ------------------- | :------------------------------------------------------------------------------------------: |
+| getLastTrainID      |                                    It gives last train id                                    |
+| addTrainWordRecord  |                                        ?? Trigger ??                                         |
+| addTrainExcluded    |  It adds a new situation to be deleted from the data it will use while training the model.   |
+| deleteTrainExcluded | It deletes a new situation to be deleted from the data it will use while training the model. |
+| updateTrainExcluded | It updates a new situation to be deleted from the data it will use while training the model. |
+| getTrainExcluded    |          It list to be deleted from the data it will use while training the model.           |
+| getTrainRecord      |                                     Lists trained models                                     |
+| deleteTrainRecord   |                                  Deletes the trained model                                   |
+| addTrainRecord      |                                    Adds the trained model                                    |
+| updateTrainRecord   |                                Updates the trained model path                                |
+
+### getLastTrainID
+
+```
+Params: None
+Description: It gives last train id
+Return:
+{
+    status: Boolean,
+    data: Last id
+}
+```
+
+### addTrainWordRecord
+
+> IN PROCESS
+
+### addTrainExcluded
+
+```
+Params: {
+    key: Exclude key,
+    value: Exclude value
+}
+Description: It adds a new situation to be deleted from the data it will use while training the model.
+Return:
+{
+    status: status,
+    message: message
+}
+```
+
+---
+
+### deleteTrainExcluded
+
+```
+Params: {
+    key: Exclude key
+}
+Description: It deletes a new situation to be deleted from the data it will use while training the model.
+Return:
+{
+    status: status,
+    message: message
+}
+```
+
+### updateTrainExcluded
+
+```
+Params: Params: {
+    key: Exclude key,
+    value: Exclude value
+}
+Description: It updates a new situation to be deleted from the data it will use while training the model.
+Return:
+{
+    status: status,
+    message: message
+}
+```
+
+### getTrainExcluded
+
+```
+Params: {
+    id: OPTIONAL || To see the restrictions in the previous model.
+}
+Description: It list to be deleted from the data it will use while training the model.
+Return:
+{
+    status: Boolean,
+    data: List
+}
+```
+
+### getTrainRecord
+
+```
+Params: None
+Description: Lists trained models
+Return:
+{
+    status: Boolean,
+    data: List
+}
+```
+
+### deleteTrainRecord
+
+```
+Params: {
+    id
+}
+Description: Deletes the trained model
+Return:
+{
+    status: status,
+    message: message
+}
+```
+
+### addTrainRecord
+
+```
+Params: {
+    version
+}
+Description: Adds the trained model
+Return:
+{
+    status: status,
+    message: message
+}
+```
+
+### updateTrainRecord
+
+```
+Params: {
+    version,
+    path
+}
+Description: Updates the trained model path
+Return:
+{
+    status: status,
+    message: message
+}
+```
 
 ## Author
 
