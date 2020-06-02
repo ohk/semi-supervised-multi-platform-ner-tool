@@ -40,6 +40,7 @@ addTagType = async (data) => {
     }
 }
 
+getAllTags = async (data) => {}
 module.exports = {
     addRecord,
     addTagType
