@@ -5,5 +5,5 @@ test('Word add', async () => {
         textID: '29325ea2-af37-4ca7-9afa-b84bad8c77fe',
         word: 'Hello'
     })
-    expect(data.status).toBe(true)
+    expect(data.status).toBe(false)
 })
