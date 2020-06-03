@@ -5,8 +5,11 @@ var cors = require('cors')
 const crawler = require('turkish-columnist-crawler')
 var schedule = require('node-schedule')
 var path = require('path')
-const DB = require('../database/index')
-const { server } = require('../ner/index')
+const DB = require('./database/index')
+const { server } = require('./ner/index')
+
+var useragent = require('express-useragent')
+const expressip = require('express-ip')
 
 /**
  * ITS crawl everyday
@@ -71,6 +74,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.raw())
+app.use(useragent.express())
+app.use(expressip().getIpInfoMiddleware)
 
 /**
  *
@@ -79,14 +84,16 @@ app.use(bodyParser.raw())
  *
  **/
 
-const tagRoute = require('./routes/tag.js')
+//const tagRoute = require('./routes/tag.js')
+const userRoute = require('./routes/user.js')
 /**
  *
  * Route Middlewares
  *
  */
 
-app.use('/api/tag', tagRoute)
+//app.use('/api/tag', tagRoute)
+app.use('/api/user', userRoute)
 
 app.listen(process.env.PORT, () => {
     console.log('Server Up! Listen port ' + process.env.PORT)
