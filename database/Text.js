@@ -8,7 +8,7 @@ add = async (data) => {
         let query
         if (type == 0) {
             query = {
-                text: 'INSERT INTO text(subURL,path,title,authorID,userID) VALUES($1, $2, $3, $4, $5)',
+                text: 'INSERT INTO text(subURL,path,title,authorID,userID) VALUES($1, $2, $3, $4, $5) RETURNING textid',
                 values: [data.subURL, data.path, data.title, data.authorID, userID]
             }
         } else if (type == 1) {
@@ -21,7 +21,7 @@ add = async (data) => {
         text = await conneciton.query(query)
 
         if (text.rowCount != 0) {
-            return { status: true, message: 'Text successfully added' }
+            return { status: true, message: 'Text successfully added', id: text.rows[0].textid }
         } else {
             return { status: false, message: 'Query error, please try again' }
         }
