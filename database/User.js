@@ -11,14 +11,33 @@ const dotenv = require('dotenv')
  */
 
 log = async (data) => {
-    var conneciton = await pool.getPool()
-    const saveQuery = {
-        text: 'INSERT INTO loginlog(device ,ipaddress ,location ,userID) VALUES($1,$2,$3,$4)',
-        values: [data.device, data.ipaddress, data.location, data.userID]
-    }
-    saveLog = await conneciton.query(saveQuery)
-    if (saveLog.rowCount === 1) {
-        return { success: true, message: 'Log is created' }
+    console.log(data)
+    try {
+        var conneciton = await pool.getPool()
+        const saveQuery = {
+            text:
+                'INSERT INTO loginlog( ipaddress,  os, platform, browser, device_type, country, city, userid) VALUES ( $1,$2,$3,$4,$5,$6,$7,$8)',
+            values: [
+                data.ipaddress,
+                data.os,
+                data.platform,
+                data.browser,
+                data.device_type,
+                data.country,
+                data.city,
+                data.userID
+            ]
+        }
+        saveLog = await conneciton.query(saveQuery)
+        console.log(saveLog)
+        if (saveLog.rowCount === 1) {
+            return { success: true, message: 'Log is created' }
+        } else {
+            return { success: false, message: 'Log is not created' }
+        }
+    } catch (error) {
+        console.log(error)
+        return { success: false, message: 'Log is not created' }
     }
 }
 
@@ -83,10 +102,10 @@ register = async (data) => {
         userID = idQ.rows[0].userid
         validationKey = jwt.sign({ id: userID }, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
 
-        //await Email.verificationMail(data.email, validationKey)
+        await Email.verificationMail(data.email, validationKey)
 
         if (saveUser.rowCount === 1) {
-            return { status: true, message: 'User is statusfully registered' }
+            return { status: true, message: 'User is succesfully registered' }
         }
     } catch (error) {
         console.log(error)
@@ -107,6 +126,13 @@ login = async (data) => {
         if (!validPassword) {
             return { status: false, message: 'Login credentials are incorrect' }
         } else {
+            if (check.rows[0].validation === false) {
+                userID = check.rows[0].userid
+                validationKey = jwt.sign({ id: userID }, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
+
+                await Email.verificationMail(check.rows[0].email, validationKey)
+                return { status: false, message: 'Please confirm your account' }
+            }
             userID = check.rows[0].userid
             data['userID'] = userID
             await log(data)
@@ -121,36 +147,45 @@ login = async (data) => {
 }
 
 forgot = async (data) => {
-    var conneciton = await pool.getPool()
+    try {
+        var conneciton = await pool.getPool()
 
-    const query = {
-        text: 'SELECT * FROM users WHERE username = $1 OR email = $1',
-        values: [data.loginCredit]
-    }
-
-    check = await conneciton.query(query)
-    if (check.rows.length != 0) {
-        userID = check.rows[0].userid
-        const isExist = {
-            text: 'SELECT * FROM forgotpassword WHERE userid = $1 AND status = 0',
-            values: [userID]
+        const query = {
+            text: 'SELECT * FROM users WHERE username = $1 OR email = $1',
+            values: [data.loginCredit]
         }
-        if (isExist.rows.length == 0) {
-            hashedKey = jwt.sign({ id: userID }, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
-            const createHashQuery = {
-                text: 'INSERT INTO forgotpassword(hashedkey, userid) VALUES($1,$2)',
-                values: [hashedKey, userID]
+
+        check = await conneciton.query(query)
+        if (check.rows.length != 0) {
+            userID = check.rows[0].userid
+            const isExistQuery = {
+                text: 'SELECT * FROM forgotpassword WHERE userid = $1 AND status = 0',
+                values: [userID]
             }
-            /**
-             * TODO: KEY GERİ DÖNDÜRME
-             */
-            createHash = await conneciton.query(createHashQuery)
-            return { status: true, key: hashedKey, message: 'Data confirmed' }
+            isExist = await conneciton.query(isExistQuery)
+            if (isExist.rows.length == 0) {
+                hashedKey = jwt.sign({ id: userID }, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
+                const createHashQuery = {
+                    text: 'INSERT INTO forgotpassword(hashedkey, userid) VALUES($1,$2)',
+                    values: [hashedKey, userID]
+                }
+                /**
+                 * TODO: KEY GERİ DÖNDÜRME
+                 */
+                createHash = await conneciton.query(createHashQuery)
+                console.log(check.rows[0])
+                await Email.forgotPasswordMail(check.rows[0].email, hashedKey)
+                return { status: true, key: hashedKey, message: 'Data confirmed' }
+            } else {
+                await Email.forgotPasswordMail(check.rows[0].email, isExist.rows[0].hashedKey)
+                return { status: true, key: isExist.rows[0].hashedKey, message: 'Data confirmed' }
+            }
         } else {
-            return { status: true, key: isExist.rows[0].hashedKey, message: 'Data confirmed' }
+            return { status: false, message: 'Login credentials are incorrect' }
         }
-    } else {
-        return { status: false, message: 'Login credentials are incorrect' }
+    } catch (error) {
+        console.log(error)
+        return { status: false, message: error }
     }
 }
 
@@ -190,7 +225,24 @@ reset = async (data) => {
     }
 }
 
-validate = (data) => {}
+validate = async (data) => {
+    try {
+        var conneciton = await pool.getPool()
+        const verified = jwt.verify(data.key, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
+        const updateQuery = {
+            text: 'UPDATE users SET validation=true WHERE userid= $1',
+            values: [verified.id]
+        }
+        validate = await conneciton.query(updateQuery)
+        if (validate.rowCount == 1) {
+            return { status: true, message: 'Your account has been successfully validated' }
+        } else {
+            return { status: false, message: 'Your account has not been successfully validated' }
+        }
+    } catch (error) {
+        return { status: false, message: error }
+    }
+}
 
 module.exports = {
     register,
