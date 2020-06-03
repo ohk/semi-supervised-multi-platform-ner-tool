@@ -66,7 +66,7 @@ Return:
 
 ### addTrainWordRecord
 
-> IN PROCESS
+> IN PROGRESS
 
 ### addTrainExcluded
 
@@ -243,7 +243,8 @@ Description: Add new text
 Return:
 {
     status: Boolean,
-    message: Status message
+    message: Status message,
+    id = textid
 }
 ```
 
@@ -263,7 +264,7 @@ Return:
 
 ### list
 
-> IN PROCESS / PAGINATION
+> IN PROGRESS / PAGINATION
 
 ```
 Params: {
@@ -287,7 +288,7 @@ Return:
 
 ### add
 
-> IN PROCESS / PAGINATION
+> IN PROGRESS / PAGINATION
 
 ```
 Params: {
@@ -413,6 +414,42 @@ THIS FUNCTION IS NOT COMPLETE. PLEASE CHECK LATER
 | ------------- | :--------------: |
 | addTagType    | Add new tag type |
 | addRecord     |  Add new record  |
+| getTagTypeID  |  Add new record  |
+| getTextTag    |  Add new record  |
+
+### getTagTypeID
+
+> IN PROGRESS
+
+```
+Params: {
+    tagname:
+    color:
+}
+Description: Add the new tag type to db
+Return:
+{
+    status: Boolean,
+    message: Status message
+}
+```
+
+### getTextTag
+
+> IN PROGRESS
+
+```
+Params: {
+    tagname:
+    color:
+}
+Description: Add the new tag type to db
+Return:
+{
+    status: Boolean,
+    message: Status message
+}
+```
 
 ### addTagType
 
