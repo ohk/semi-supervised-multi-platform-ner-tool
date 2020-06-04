@@ -99,7 +99,7 @@ router.post('/login', async (req, res) => {
 
         var result = await DB.User.login(data)
         if (result.status === true) {
-            return res.status(200).send(result.message)
+            return res.status(200).send(result)
         } else {
             return res.status(400).send(result.message)
         }
