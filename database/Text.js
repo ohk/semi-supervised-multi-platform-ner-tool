@@ -13,13 +13,13 @@ add = async (data) => {
             }
         } else if (type == 1) {
             query = {
-                text: 'INSERT INTO text(subURL,path,userID) VALUES($1, $2, $3)',
-                values: [data.subURL, data.path, userID]
+                text: 'INSERT INTO text(path,userID) VALUES($1, $2) RETURNING textid',
+                values: [data.path, userID]
             }
         }
 
         text = await conneciton.query(query)
-
+        console.log(text)
         if (text.rowCount != 0) {
             return { status: true, message: 'Text successfully added', id: text.rows[0].textid }
         } else {
