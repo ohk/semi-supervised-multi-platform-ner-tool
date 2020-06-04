@@ -11,7 +11,6 @@ const dotenv = require('dotenv')
  */
 
 log = async (data) => {
-    console.log(data)
     try {
         var conneciton = await pool.getPool()
         const saveQuery = {
@@ -29,14 +28,12 @@ log = async (data) => {
             ]
         }
         saveLog = await conneciton.query(saveQuery)
-        console.log(saveLog)
         if (saveLog.rowCount === 1) {
             return { success: true, message: 'Log is created' }
         } else {
             return { success: false, message: 'Log is not created' }
         }
     } catch (error) {
-        console.log(error)
         return { success: false, message: 'Log is not created' }
     }
 }
@@ -108,7 +105,6 @@ register = async (data) => {
             return { status: true, message: 'User is succesfully registered' }
         }
     } catch (error) {
-        console.log(error)
         return { status: false, message: error.message }
     }
 }
@@ -136,10 +132,8 @@ login = async (data) => {
             userID = check.rows[0].userid
             data['userID'] = userID
             await log(data)
-            /**
-             * TODO AUTH CODE RETURN
-             */
-            return { status: true, user_id: userID, message: 'Login credentials are correct' }
+            token = jwt.sign({ id: userID }, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
+            return { status: true, user_id: userID, token: token, message: 'Login credentials are correct' }
         }
     } else {
         return { status: false, message: 'Login credentials are incorrect' }
@@ -173,7 +167,6 @@ forgot = async (data) => {
                  * TODO: KEY GERİ DÖNDÜRME
                  */
                 createHash = await conneciton.query(createHashQuery)
-                console.log(check.rows[0])
                 await Email.forgotPasswordMail(check.rows[0].email, hashedKey)
                 return { status: true, key: hashedKey, message: 'Data confirmed' }
             } else {
@@ -184,7 +177,6 @@ forgot = async (data) => {
             return { status: false, message: 'Login credentials are incorrect' }
         }
     } catch (error) {
-        console.log(error)
         return { status: false, message: error }
     }
 }
