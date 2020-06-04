@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS users (
   createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updatedAt TIMESTAMP,
   validation BOOLEAN NOT NULL DEFAULT 'false',
+  role INT DEFAULT 1,
   notes VARCHAR,
   textCount INT DEFAULT 0,
   requestCount INT DEFAULT 0,
@@ -45,10 +46,14 @@ CREATE TABLE IF NOT EXISTS users (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS loginLog (
   logID SERIAL NOT NULL,
-  device VARCHAR NOT NULL,
   ipAddress VARCHAR NOT NULL,
   createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  location VARCHAR,
+  os VARCHAR NOT NULL,
+  platform VARCHAR NOT NULL,
+  browser VARCHAR NOT NULL,
+  device_type INT NOT NULL,
+  country VARCHAR NOT NULL,
+  city VARCHAR NOT NULL,
   userID INT NOT NULL DEFAULT 1,
   PRIMARY KEY (logID),
   CONSTRAINT userID
@@ -62,8 +67,8 @@ CREATE TABLE IF NOT EXISTS loginLog (
 -- Table `mydb`.`systemSetting`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS setting (
-  Key VARCHAR NOT NULL UNIQUE,
-  value VARCHAR NOT NULL,
+  key VARCHAR NOT NULL UNIQUE,
+  value INT NOT NULL,
   PRIMARY KEY (key));
 
 -- -----------------------------------------------------
@@ -250,6 +255,8 @@ CREATE TABLE IF NOT EXISTS NERTrainWordRecord (
 
 
 
+
+
 CREATE FUNCTION update_tagCount() RETURNS trigger AS $update_tagCount$
     BEGIN
 		IF(TG_OP = 'DELETE') THEN
@@ -329,4 +336,4 @@ INSERT INTO tagtype(tagname, color) VALUES ( 'ORGANIZATION', '#ff5200');
 INSERT INTO tagtype(tagname, color) VALUES ( 'PERCENT', '#9a1f40');
 INSERT INTO tagtype(tagname, color) VALUES ( 'DATE', '#30475e');
 INSERT INTO tagtype(tagname, color) VALUES ( 'TIME', '#512b58');
-INSERT INTO tagtype(tagname, color) VALUES ( 'OTHER', '#FFFFFF');
+INSERT INTO tagtype(tagname, color) VALUES ( 'O', '#FFFFFF');
