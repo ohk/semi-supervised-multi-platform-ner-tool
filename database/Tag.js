@@ -8,7 +8,7 @@ addRecord = async (data) => {
             try {
                 const query = {
                     text: 'INSERT INTO tagrecord(userID,tagTypeID,wordID) VALUES($1, $2, $3)',
-                    values: [data.userID, data.tags[i].tagTypeID, data.tags[i].wordID]
+                    values: [data.userID, data.tags[i].tagtypeid, data.tags[i].wordid]
                 }
                 record = await conneciton.query(query)
             } catch (error) {
@@ -61,16 +61,17 @@ getTagTypeID = async (data) => {
 getTextTag = async (data) => {
     try {
         var conneciton = pool.getPool()
+        console.log(data)
         const query = {
             text:
                 'SELECT words.wordid, words.word, tt.tagtypeid, tt.tagname FROM (SELECT w.wordid, w.word FROM text t, word w WHERE t.textid = $1 AND w.textid = t.textid) words, tagcount tc, tagtype tt WHERE tc.count = (SELECT MAX(count) FROM tagcount WHERE wordid = words.wordid) AND tc.wordid = words.wordid AND tt.tagtypeid = tc.tagtypeid',
-            values: [data.tagname]
+            values: [data.textid]
         }
         type = await conneciton.query(query)
         if (type.rowCount != 0) {
             return { status: true, data: type.rows }
         } else {
-            return { status: false, message: 'Query error, please try again' }
+            return { status: false, message: 'Query error, please try again ----' }
         }
     } catch (error) {
         return { status: false, message: error.message }
@@ -80,5 +81,6 @@ getTextTag = async (data) => {
 module.exports = {
     addRecord,
     getTagTypeID,
-    addTagType
+    addTagType,
+    getTextTag
 }
