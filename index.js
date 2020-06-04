@@ -23,7 +23,7 @@ schedule.scheduleJob('0 10 * * *', async () => {
                     last: true,
                     externalParams: { userid: 1, authorid: authors.data[i].authorid },
                     saveDisk: true,
-                    filePath: path.join(__dirname, '../texts'),
+                    filePath: path.join(__dirname, '../texts/system'),
                     strOp: true
                 })
                 text = await DB.Text.add({
@@ -38,7 +38,7 @@ schedule.scheduleJob('0 10 * * *', async () => {
                 server.post(data[0].content, async (err, res) => {
                     var tags = []
                     for (let i = 0; i < res.tags.length; i++) {
-                        if (res.tags[i].tag !== undefined && res.tags[i].tag !== null) {
+                        if (typeof res.tags[i].tag == 'string') {
                             word = res.tags[i].word
                             tag = await DB.Tag.getTagTypeID({
                                 tagname: res.tags[i].tag
@@ -48,8 +48,8 @@ schedule.scheduleJob('0 10 * * *', async () => {
                                 word
                             })
                             tmp = {}
-                            tmp['tagTypeID'] = tag.id
-                            tmp['wordID'] = wordR.id
+                            tmp['tagtypeid'] = tag.id
+                            tmp['wordid'] = wordR.id
                             tags.push(tmp)
                         }
                     }
@@ -84,7 +84,7 @@ app.use(expressip().getIpInfoMiddleware)
  *
  **/
 
-//const tagRoute = require('./routes/tag.js')
+const textRoute = require('./routes/text.js')
 const userRoute = require('./routes/user.js')
 /**
  *
@@ -92,7 +92,7 @@ const userRoute = require('./routes/user.js')
  *
  */
 
-//app.use('/api/tag', tagRoute)
+app.use('/api/text', textRoute)
 app.use('/api/user', userRoute)
 
 app.listen(process.env.PORT, () => {
