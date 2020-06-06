@@ -18,19 +18,6 @@ add = async (data) => {
     }
 }
 
-get = async () => {
-    try {
-        var conneciton = pool.getPool()
-        const query = {
-            text: 'SELECT * FROM setting'
-        }
-        settings = await conneciton.query(query)
-        return { status: true, data: settings.rows }
-    } catch (error) {
-        return { status: false, data: [] }
-    }
-}
-
 update = async (data) => {
     try {
         var conneciton = pool.getPool()
@@ -66,9 +53,22 @@ deleteS = async (data) => {
         return { status: false, message: error.message }
     }
 }
+
+list = async () => {
+    try {
+        var conneciton = pool.getPool()
+        const query = {
+            text: 'SELECT * FROM setting'
+        }
+        settings = await conneciton.query(query)
+        return { status: true, data: settings.rows }
+    } catch (error) {
+        return { status: false, data: [] }
+    }
+}
 module.exports = {
     add,
-    get,
+    list,
     update,
     deleteS
 }
