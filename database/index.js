@@ -5,6 +5,7 @@ const Word = require('./Word')
 const Settings = require('./Settings')
 const Tag = require('./Tag')
 const Train = require('./Train')
+const Dashboard = require('./Dashboard')
 
 module.exports = {
     User,
@@ -13,5 +14,6 @@ module.exports = {
     Word,
     Settings,
     Tag,
-    Train
+    Train,
+    Dashboard
 }
