@@ -38,6 +38,11 @@ addRecord = async (data) => {
 
 addTagType = async (data) => {
     try {
+        /**
+         * TODO Aynı tagname ile 2. bir tag eklenemesin,
+         * TODO Aynı renk ile 2. bir tag eklenemesin,
+         * TODO null ise ekleme yapılmasın
+         */
         var conneciton = pool.getPool()
         const query = {
             text: 'INSERT INTO tagtype(tagname,color) VALUES($1, $2)',
