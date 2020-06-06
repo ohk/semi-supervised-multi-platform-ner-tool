@@ -52,6 +52,18 @@ router.post('/add', verify, async (req, res) => {
     }
 })
 
+router.get('/list', async (req, res) => {
+    try {
+        data = {}
+        page = parseInt(req.query.page || 0)
+        data.offset = page * 15
+        result = await DB.Text.list(data)
+        res.status(200).send(result)
+    } catch (error) {
+        res.status(400).send({ status: false, error: error })
+    }
+})
+
 router.get('/:textid', verify, async (req, res) => {
     try {
         textid = req.params.textid
