@@ -87,6 +87,7 @@ app.use(expressip().getIpInfoMiddleware)
 const textRoute = require('./routes/text.js')
 const userRoute = require('./routes/user.js')
 const dashRoute = require('./routes/dashboard.js')
+const systemRoute = require('./routes/system.js')
 /**
  *
  * Route Middlewares
@@ -96,6 +97,7 @@ const dashRoute = require('./routes/dashboard.js')
 app.use('/api/text', textRoute)
 app.use('/api/user', userRoute)
 app.use('/api/dashboard', dashRoute)
+app.use('/api/system', systemRoute)
 app.listen(process.env.PORT, () => {
     console.log('Server Up! Listen port ' + process.env.PORT)
 })
