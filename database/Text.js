@@ -2,6 +2,7 @@ const pool = require('./pool')
 
 add = async (data) => {
     try {
+        console.log(data)
         var conneciton = pool.getPool()
         var type = data.type || 0
         var userID = data.userID || 1
@@ -11,6 +12,10 @@ add = async (data) => {
                 text: 'INSERT INTO text(subURL,path,title,authorID,userID) VALUES($1, $2, $3, $4, $5) RETURNING textid',
                 values: [data.subURL, data.path, data.title, data.authorID, userID]
             }
+            await conneciton.query({
+                text: 'UPDATE author SET textcount=textcount+1 WHERE authorid=$1',
+                values: [data.authorID]
+            })
         } else if (type == 1) {
             query = {
                 text: 'INSERT INTO text(path,userID) VALUES($1, $2) RETURNING textid',
@@ -19,7 +24,6 @@ add = async (data) => {
         }
 
         text = await conneciton.query(query)
-        console.log(text)
         if (text.rowCount != 0) {
             return { status: true, message: 'Text successfully added', id: text.rows[0].textid }
         } else {
