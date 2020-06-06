@@ -300,7 +300,7 @@ $update_textCount$ LANGUAGE plpgsql;
 CREATE TRIGGER update_textCount AFTER INSERT ON text
     FOR EACH ROW EXECUTE PROCEDURE update_textCount();
 
-INSERT INTO users(name, surname, username, password, email, validation) VALUES ( 'root', 'root', 'root', 'root', 'root', true);
+INSERT INTO users(name, surname, username, password, email, validation,role) VALUES ( 'root', 'root', 'root', 'root', 'root', true,0);
 
 INSERT INTO author(authorname,mainurl,category,crawl) VALUES('root','root','root',false);
 INSERT INTO author(authorname,mainurl,category) VALUES('Abdurrahman Yıldırım','https://www.haberturk.com/htyazar/abdurrahman-yildirim-1018/','Ekonomi');
