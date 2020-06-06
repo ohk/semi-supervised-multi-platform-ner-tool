@@ -85,16 +85,33 @@ getTextTag = async (data) => {
         if (type.rowCount != 0) {
             return { status: true, data: type.rows }
         } else {
-            return { status: false, message: 'Query error, please try again ----' }
+            return { status: false, message: 'Query error, please try again' }
         }
     } catch (error) {
         return { status: false, message: error.message }
     }
 }
 
+listTagTypes = async () => {
+    try {
+        var conneciton = pool.getPool()
+        const query = {
+            text: 'SELECT * FROM tagtype'
+        }
+        type = await conneciton.query(query)
+        if (type.rowCount != 0) {
+            return { status: true, data: type.rows }
+        } else {
+            return { status: false, message: 'Query error, please try again' }
+        }
+    } catch (error) {
+        return { status: false, message: error.message }
+    }
+}
 module.exports = {
     addRecord,
     getTagTypeID,
     addTagType,
-    getTextTag
+    getTextTag,
+    listTagTypes
 }
