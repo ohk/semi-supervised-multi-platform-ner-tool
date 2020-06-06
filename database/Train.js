@@ -73,11 +73,11 @@ updateTrainExcluded = async (data) => {
 }
 getTrainExcluded = async (data) => {
     try {
-        lastTrain = data.id || (await getLastTrainID())
+        trainid = data.id || (await getLastTrainID())
         var conneciton = pool.getPool()
         const query = {
             text: 'SELECT * FROM trainexcluded WHERE trainrecordid = $1',
-            values: [lastTrain.data]
+            values: [trainid]
         }
         train = await conneciton.query(query)
         return { status: true, data: train.rows }
