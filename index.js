@@ -18,7 +18,7 @@ schedule.scheduleJob('0 10 * * *', async () => {
     try {
         var authors = await DB.Author.get()
         if (authors.status === true) {
-            for (var i = 1; i < authors.data.length; i++) {
+            for (var i = 0; i < authors.data.length; i++) {
                 data = await crawler(authors.data[i].mainurl, {
                     last: true,
                     externalParams: { userid: 1, authorid: authors.data[i].authorid },
