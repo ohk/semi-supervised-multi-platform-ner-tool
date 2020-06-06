@@ -308,6 +308,7 @@ CREATE TRIGGER newTrainRecord AFTER INSERT ON nerTrainRecord
 
 INSERT INTO users(name, surname, username, password, email, validation) VALUES ( 'root', 'root', 'root', 'root', 'root', true);
 
+INSERT INTO author(authorname,mainurl,category) VALUES('root','root','root');
 INSERT INTO author(authorname,mainurl,category) VALUES('Abdurrahman Yıldırım','https://www.haberturk.com/htyazar/abdurrahman-yildirim-1018/','Ekonomi');
 INSERT INTO author(authorname,mainurl,category) VALUES('Esfender Korkmaz','https://www.yenicaggazetesi.com.tr/esfender-korkmaz-18022y.htm','Ekonomi');
 INSERT INTO author(authorname,mainurl,category) VALUES('Gila Benmayor','http://www.hurriyet.com.tr/yazarlar/gila-benmayor/','Ekonomi');
