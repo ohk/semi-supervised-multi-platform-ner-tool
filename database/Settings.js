@@ -9,7 +9,7 @@ add = async (data) => {
         }
         settings = await conneciton.query(query)
         if (settings.rowCount != 0) {
-            return { status: true, message: 'Type successfully added' }
+            return { status: true, message: 'Setting successfully added' }
         } else {
             return { status: false, message: 'Query error, please try again' }
         }
