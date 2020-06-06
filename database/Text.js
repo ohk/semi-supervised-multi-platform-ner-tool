@@ -18,8 +18,8 @@ add = async (data) => {
             })
         } else if (type == 1) {
             query = {
-                text: 'INSERT INTO text(path,userID) VALUES($1, $2) RETURNING textid',
-                values: [data.path, userID]
+                text: 'INSERT INTO text(path,userID,title) VALUES($1, $2, $3) RETURNING textid',
+                values: [data.path, userID, 'Added by user']
             }
         }
 
@@ -48,14 +48,12 @@ get = async (data) => {
     }
 }
 
-list = async () => {
-    /**
-     * TODO : Page yapısı
-     */
+list = async (data) => {
     try {
         var conneciton = pool.getPool()
         const query = {
-            text: 'SELECT * FROM text'
+            text: 'SELECT * FROM text ORDER BY tagcount ASC,createdat DESC LIMIT 15 OFFSET $1',
+            values: [data.offset]
         }
         text = await conneciton.query(query)
         return { status: true, data: text.rows }
