@@ -106,6 +106,7 @@ CREATE TABLE IF NOT EXISTS author (
   mainURL VARCHAR NOT NULL,
   category VARCHAR,
   textCount INT DEFAUlT 0,
+  crawl BOOLEAN DEFAULT 'true',
   PRIMARY KEY (authorID));
 
 
@@ -254,43 +255,6 @@ CREATE TABLE IF NOT EXISTS NERTrainWordRecord (
 --SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 --SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
-
-
-
-
-CREATE FUNCTION update_tagCount() RETURNS trigger AS $update_tagCount$
-    BEGIN
-		IF(TG_OP = 'DELETE') THEN
-			UPDATE tagCount SET count = count - 1 WHERE new.wordID = wordID AND new.tagTypeID = tagTypeID;
-		ELSE
-			IF((SELECT COUNT(*) FROM tagCount WHERE wordID = new.wordID AND tagTypeID = new.tagTypeID) < 1) THEN
-				INSERT INTO tagCount (wordid, tagtypeid, count)
-				VALUES (new.wordid, new.tagtypeid, 1);
-			ELSE
-				UPDATE tagCount SET count = count + 1 WHERE new.wordID = wordID AND new.tagTypeID = tagTypeID;
-			END IF;
-		END IF;
-		RETURN new;
-	END;
-$update_tagCount$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_tagCount AFTER INSERT OR DELETE ON tagRecord
-    FOR EACH ROW EXECUTE PROCEDURE update_tagCount();
-
-
-CREATE FUNCTION update_textCount() RETURNS trigger AS $update_textCount$
-    BEGIN
-		UPDATE users SET textCount = textCount + 1 WHERE new.userid = userid;
-		RETURN new;
-	END;
-$update_textCount$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_textCount AFTER INSERT ON text
-    FOR EACH ROW EXECUTE PROCEDURE update_textCount();
-
-
-
-
 CREATE FUNCTION newTrainRecord() RETURNS trigger AS $newTrainRecord$
 	DECLARE
 		excluded_records CURSOR FOR SELECT * FROM trainExcluded WHERE trainRecordID = new.recordID - 1;
@@ -308,7 +272,7 @@ CREATE TRIGGER newTrainRecord AFTER INSERT ON nerTrainRecord
 
 INSERT INTO users(name, surname, username, password, email, validation) VALUES ( 'root', 'root', 'root', 'root', 'root', true);
 
-INSERT INTO author(authorname,mainurl,category) VALUES('root','root','root');
+INSERT INTO author(authorname,mainurl,category,crawl) VALUES('root','root','root',false);
 INSERT INTO author(authorname,mainurl,category) VALUES('Abdurrahman Yıldırım','https://www.haberturk.com/htyazar/abdurrahman-yildirim-1018/','Ekonomi');
 INSERT INTO author(authorname,mainurl,category) VALUES('Esfender Korkmaz','https://www.yenicaggazetesi.com.tr/esfender-korkmaz-18022y.htm','Ekonomi');
 INSERT INTO author(authorname,mainurl,category) VALUES('Gila Benmayor','http://www.hurriyet.com.tr/yazarlar/gila-benmayor/','Ekonomi');
