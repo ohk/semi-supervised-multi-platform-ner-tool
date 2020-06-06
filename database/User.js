@@ -248,6 +248,20 @@ isUserAdmin = async (data) => {
     }
 }
 
+list = async (data) => {
+    try {
+        var conneciton = pool.getPool()
+        const query = {
+            text:
+                'SELECT userid,name,surname,username,email,role,textcount,requestcount,validation FROM users ORDER BY createdat DESC LIMIT 15 OFFSET $1',
+            values: [data.offset]
+        }
+        user = await conneciton.query(query)
+        return { status: true, data: user.rows }
+    } catch (error) {
+        return { status: false, data: [] }
+    }
+}
 module.exports = {
     register,
     log,
@@ -255,5 +269,6 @@ module.exports = {
     reset,
     forgot,
     login,
-    isUserAdmin
+    isUserAdmin,
+    list
 }
