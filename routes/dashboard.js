@@ -3,7 +3,7 @@ const DB = require('../database/index')
 const verify = require('../middleware/verify')
 
 router.get('/', verify, async (req, res) => {
-    isUserAdmin = await DB.User.isUserAdmin(req.userid.id)
+    isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
     if (isUserAdmin.status === true) {
         result = await DB.Dashboard.get()
         if (result.status === true) {
