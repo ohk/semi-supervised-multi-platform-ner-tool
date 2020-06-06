@@ -16,6 +16,20 @@ addRecord = async (data) => {
                 console.log(error)
             }
         }
+        try {
+            await conneciton.query({
+                text: 'UPDATE users SET textcount=textcount+1 WHERE userid = $1',
+                values: [data.userID]
+            })
+
+            await conneciton.query({
+                text: 'UPDATE text SET tagcount=tagcount+1 WHERE textid= $1',
+                values: [data.textid]
+            })
+        } catch (error) {
+            status = false
+            console.log(error)
+        }
         return { status: status, message: 'Record successfully added' }
     } catch (error) {
         return { status: false, message: error.message }
@@ -64,7 +78,7 @@ getTextTag = async (data) => {
         console.log(data)
         const query = {
             text:
-                'SELECT words.wordid, words.word, tt.tagtypeid, tt.tagname FROM (SELECT w.wordid, w.word FROM text t, word w WHERE t.textid = $1 AND w.textid = t.textid) words, tagcount tc, tagtype tt WHERE tc.count = (SELECT MAX(count) FROM tagcount WHERE wordid = words.wordid) AND tc.wordid = words.wordid AND tt.tagtypeid = tc.tagtypeid',
+                'SELECT words.wordid, words.word, tt.tagtypeid, tt.tagname FROM (SELECT w.wordid, w.word,w.createdat FROM text t, word w WHERE t.textid = $1 AND w.textid = t.textid) words, tagcount tc, tagtype tt WHERE tc.count = (SELECT MAX(count) FROM tagcount WHERE wordid = words.wordid) AND tc.wordid = words.wordid AND tt.tagtypeid = tc.tagtypeid ORDER BY words.createdat',
             values: [data.textid]
         }
         type = await conneciton.query(query)
