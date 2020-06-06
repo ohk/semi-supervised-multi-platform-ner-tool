@@ -63,7 +63,7 @@ updateTrainExcluded = async (data) => {
         }
         train = await conneciton.query(query)
         if (train.rowCount != 0) {
-            return { status: true, message: 'Train excluded successfully deleted' }
+            return { status: true, message: 'Train excluded successfully updated' }
         } else {
             return { status: false, message: 'Query error, please try again' }
         }
@@ -73,7 +73,8 @@ updateTrainExcluded = async (data) => {
 }
 getTrainExcluded = async (data) => {
     try {
-        trainid = data.id || (await getLastTrainID())
+        a = await getLastTrainID()
+        trainid = data.id || a.data
         var conneciton = pool.getPool()
         const query = {
             text: 'SELECT * FROM trainexcluded WHERE trainrecordid = $1',
