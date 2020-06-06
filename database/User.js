@@ -4,12 +4,6 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const dotenv = require('dotenv')
 
-/**
- * TODO: Email implementation
- * TODO: Validate Account
- * TODO: Login if not valid send validation mail
- */
-
 log = async (data) => {
     try {
         var conneciton = await pool.getPool()
@@ -236,11 +230,30 @@ validate = async (data) => {
     }
 }
 
+isUserAdmin = async (data) => {
+    try {
+        var conneciton = await pool.getPool()
+        const query = {
+            text: 'SELECT * FROM users WHERE userid= $1 AND role = 0',
+            values: [data.id]
+        }
+        admin = await conneciton.query(query)
+        if (admin.rowCount == 1) {
+            return { status: true, message: 'Hello Admin' }
+        } else {
+            return { status: false, message: 'Meh! You are not an admin!' }
+        }
+    } catch (error) {
+        return { status: false, message: error }
+    }
+}
+
 module.exports = {
     register,
     log,
     validate,
     reset,
     forgot,
-    login
+    login,
+    isUserAdmin
 }
