@@ -63,7 +63,7 @@ block = async (data) => {
         }
         block = await conneciton.query(blockQ)
         if (block.rowCount != 0) {
-            return { status: true, message: 'Author successfully added' }
+            return { status: true, message: 'Author successfully blocked' }
         } else {
             return { status: false, message: 'Query error, please try again' }
         }
@@ -81,7 +81,7 @@ unblock = async (data) => {
         }
         block = await conneciton.query(blockQ)
         if (block.rowCount != 0) {
-            return { status: true, message: 'Author successfully added' }
+            return { status: true, message: 'Author successfully unblocked' }
         } else {
             return { status: false, message: 'Query error, please try again' }
         }
