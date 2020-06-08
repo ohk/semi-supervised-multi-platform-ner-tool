@@ -83,7 +83,7 @@ getTextTag = async (data) => {
         console.log(data)
         const query = {
             text:
-                'SELECT words.wordid, words.word, tt.tagtypeid, tt.tagname FROM (SELECT w.wordid, w.word,w.createdat FROM text t, word w WHERE t.textid = $1 AND w.textid = t.textid) words, tagcount tc, tagtype tt WHERE tc.count = (SELECT MAX(count) FROM tagcount WHERE wordid = words.wordid) AND tc.wordid = words.wordid AND tt.tagtypeid = tc.tagtypeid ORDER BY words.createdat',
+                'SELECT * FROM( SELECT DISTINCT ON (words.wordid)  words.wordid, words.word, tt.tagtypeid, tt.tagname,words.createdat FROM (SELECT w.wordid, w.word,w.createdat FROM text t, word w WHERE t.textid = $1 AND w.textid = t.textid) words, tagcount tc, tagtype tt WHERE tc.count = (SELECT MAX(count) FROM tagcount WHERE wordid = words.wordid) AND tc.wordid = words.wordid AND tt.tagtypeid = tc.tagtypeid) t ORDER BY t.createdat',
             values: [data.textid]
         }
         type = await conneciton.query(query)
