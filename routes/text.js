@@ -6,6 +6,8 @@ const moment = require('moment')
 var path = require('path')
 const { server } = require('../ner/index')
 
+const strOps = require('../middleware/stringOps')
+
 router.post('/add', verify, async (req, res) => {
     try {
         let filename = path.join(
@@ -20,11 +22,13 @@ router.post('/add', verify, async (req, res) => {
             type: 1
         })
         textid = text.id
-        await server.post(req.body.content, async (err, resS) => {
+        textContent = strOps.convertText(req.body.content)
+        await server.post(textContent, async (err, resS) => {
             var tags = []
             for (let i = 0; i < resS.tags.length; i++) {
                 if (typeof resS.tags[i].tag == 'string') {
                     word = resS.tags[i].word
+                    console.log(word)
                     tag = await DB.Tag.getTagTypeID({
                         tagname: resS.tags[i].tag
                     })
