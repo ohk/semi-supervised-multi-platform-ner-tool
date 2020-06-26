@@ -63,13 +63,14 @@ router.post('/register', async (req, res) => {
         const { error } = validate.registerValidation(req.body)
         if (error) return res.status(400).send(error.details[0].message)
         var result = await DB.User.register(req.body)
+        console.log(result)
         if (result.status === true) {
-            return res.status(200).send(result.message)
+            return res.status(200).send(result)
         } else {
-            return res.status(400).send(result.message)
+            return res.status(400).send(result)
         }
     } catch (error) {
-        res.status(400).send('Error: ' + error)
+        res.status(400).send({ status: false, message: 'Error: ' + error })
     }
 })
 
@@ -101,7 +102,7 @@ router.post('/login', async (req, res) => {
         if (result.status === true) {
             return res.status(200).send(result)
         } else {
-            return res.status(400).send(result.message)
+            return res.status(400).send(result)
         }
     } catch (error) {
         res.status(400).send('Error: ' + error)
@@ -111,12 +112,12 @@ router.post('/validate/:validate', async (req, res) => {
     try {
         var result = await DB.User.validate({ key: req.params.validate })
         if (result.status === true) {
-            return res.status(200).send(result.message)
+            return res.status(200).send({ status: true, message: result.message })
         } else {
-            return res.status(400).send(result.message)
+            return res.status(400).send({ status: false, message: result.message })
         }
     } catch (error) {
-        res.status(400).send('Error: ' + error)
+        res.status(400).send({ status: false, error: error })
     }
 })
 
