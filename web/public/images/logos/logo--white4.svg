@@ -1,0 +1,5 @@
+<svg height="36" width="200">
+  <text x="10" y="20" style="fill:red;">YTU-CE
+    <tspan x="10" y="45">Semi-supervised ner-tool</tspan>
+  </text>
+</svg>

@@ -1,0 +1,18 @@
+SELECT t.wordid,t.tagtypeid,t.tagname FROM(SELECT DISTINCT ON (words.wordid) words.wordid, words.word, tt.tagtypeid, tt.tagname, words.createdat
+FROM word words, (
+	SELECT t.textID 
+	FROM trainExcluded te, author a, text t 
+	WHERE te.trainRecordID = 1 AND (
+		(te.key = 'author' AND a.authorID = CAST(te.value AS integer) AND a.authorID = t.authorID)
+		OR 
+		(te.key = 'BEGIN' AND t.createdat >= CAST(te.value AS timestamp with time zone))
+	)
+) texts, tagcount tc, tagtype tt 
+WHERE texts.textID = words.textID AND tc.wordid = words.wordid 
+AND tc.count = (SELECT MAX(count) FROM tagcount WHERE wordid = words.wordid) AND tt.tagtypeid = tc.tagtypeid) t ORDER BY t.createdat
+
+
+
+/****************************************************************/
+Text with datalarla
+SELECT * FROM text t,author a, users u WHERE t.authorid = a.authorid AND t.userid = u.userid 
