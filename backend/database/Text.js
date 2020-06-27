@@ -52,7 +52,8 @@ list = async (data) => {
     try {
         var conneciton = pool.getPool()
         const query = {
-            text: 'SELECT * FROM text ORDER BY tagcount ASC,createdat DESC LIMIT 15 OFFSET $1',
+            text:
+                'SELECT textid,title,authorname,name,surname,t.tagcount,t.createdat FROM text t,author a, users u WHERE t.authorid = a.authorid AND t.userid = u.userid ORDER BY tagcount ASC,createdat DESC LIMIT 15 OFFSET $1',
             values: [data.offset]
         }
         text = await conneciton.query(query)
