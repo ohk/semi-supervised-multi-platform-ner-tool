@@ -40,7 +40,7 @@ const Sidebar = props => {
     const { open, variant, onClose, className, ...rest } = props
     var pages = []
     const classes = useStyles()
-    if (localStorage.getItem('isAdmin') === true) {
+    if (localStorage.getItem('isAdmin') === 'true') {
         pages = [
             {
                 title: 'Dashboard',
