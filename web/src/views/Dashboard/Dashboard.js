@@ -25,16 +25,13 @@ const Dashboard = props => {
     const { history } = props
     const classes = useStyles()
 
-    // if (localStorage.getItem("isAdmin") !== true) {
-    //   history.push("/dashboardUser");
-    // }
-    // try {
-    //   if (localStorage.getItem("token").length < 0) {
-    //     history.push("/");
-    //   }
-    // } catch (error) {
-    //   history.push("/");
-    // }
+    try {
+        if (localStorage.getItem('token').length < 0) {
+            history.push('/')
+        }
+    } catch (error) {
+        history.push('/')
+    }
 
     return (
         <div className={classes.root}>
