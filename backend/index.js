@@ -25,7 +25,7 @@ schedule.scheduleJob('0 10 * * *', async () => {
                         last: true,
                         externalParams: { userid: 1, authorid: authors.data[i].authorid },
                         saveDisk: true,
-                        filePath: path.join(__dirname, '../texts/system'),
+                        filePath: path.join(__dirname, './texts/system'),
                         strOp: true
                     })
                     text = await DB.Text.add({
