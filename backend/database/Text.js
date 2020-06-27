@@ -19,7 +19,7 @@ add = async (data) => {
         } else if (type == 1) {
             query = {
                 text: 'INSERT INTO text(path,userID,title) VALUES($1, $2, $3) RETURNING textid',
-                values: [data.path, userID, 'Added by user']
+                values: [data.path, userID, data.title]
             }
         }
 
@@ -53,13 +53,18 @@ list = async (data) => {
         var conneciton = pool.getPool()
         const query = {
             text:
-                'SELECT textid,title,authorname,name,surname,t.tagcount,t.createdat FROM text t,author a, users u WHERE t.authorid = a.authorid AND t.userid = u.userid ORDER BY tagcount ASC,createdat DESC LIMIT 15 OFFSET $1',
-            values: [data.offset]
+                'SELECT textid,title,authorname,name,surname,t.tagcount,t.createdat FROM text t,author a, users u WHERE t.authorid = a.authorid AND t.userid = u.userid ORDER BY tagcount ASC,createdat DESC LIMIT $1 OFFSET $2',
+            values: [data.rows, data.offset]
         }
         text = await conneciton.query(query)
-        return { status: true, data: text.rows }
+        const queryC = {
+            text: 'SELECT COUNT(*) FROM text'
+        }
+        count = await conneciton.query(queryC)
+        console.log(count)
+        return { status: true, data: text.rows, count: count.rows[0].count }
     } catch (error) {
-        return { status: false, data: [] }
+        return { status: false, data: [], error: error }
     }
 }
 
