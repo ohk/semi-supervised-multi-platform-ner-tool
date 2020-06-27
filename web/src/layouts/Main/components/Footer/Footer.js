@@ -1,30 +1,32 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
-import { Typography } from '@material-ui/core';
+import React from 'react'
+import PropTypes from 'prop-types'
+import clsx from 'clsx'
+import { makeStyles } from '@material-ui/styles'
+import { Typography } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(4)
-  }
-}));
+    root: {
+        padding: theme.spacing(4)
+    }
+}))
 
 const Footer = props => {
-  const { className, ...rest } = props;
+    const { className, ...rest } = props
 
-  const classes = useStyles();
+    const classes = useStyles()
 
-  return (
-    <div {...rest} className={clsx(classes.root, className)}>
-      <Typography variant="body1">&copy; OHK</Typography>
-      <Typography variant="caption">Created with love.</Typography>
-    </div>
-  );
-};
+    return (
+        <div {...rest} className={clsx(classes.root, className)}>
+            <Typography variant="body1">
+                Developed by <a href="https://ohkamisli.dev">Ömer Hamid Kamışlı</a>
+            </Typography>
+            <Typography variant="caption">Created with love.</Typography>
+        </div>
+    )
+}
 
 Footer.propTypes = {
-  className: PropTypes.string
-};
+    className: PropTypes.string
+}
 
-export default Footer;
+export default Footer
