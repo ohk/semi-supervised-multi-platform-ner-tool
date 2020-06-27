@@ -119,15 +119,21 @@ login = async (data) => {
             if (check.rows[0].validation === false) {
                 userID = check.rows[0].userid
                 validationKey = jwt.sign({ id: userID }, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
-
                 await Email.verificationMail(check.rows[0].email, validationKey)
                 return { status: false, message: 'Please confirm your account' }
             }
             userID = check.rows[0].userid
+            check.rows[0].role === 0 ? (isAdmin = true) : (isAdmin = false)
             data['userID'] = userID
             await log(data)
             token = jwt.sign({ id: userID }, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
-            return { status: true, user_id: userID, token: token, message: 'Login credentials are correct' }
+            return {
+                status: true,
+                isAdmin: isAdmin,
+                user_id: userID,
+                token: token,
+                message: 'Login credentials are correct'
+            }
         }
     } else {
         return { status: false, message: 'Login credentials are incorrect' }
