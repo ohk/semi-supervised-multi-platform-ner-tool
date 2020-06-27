@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Sidebar = props => {
-    const { open, variant, onClose, className, ...rest } = props
+    const { open, variant, onClose, className, history, ...rest } = props
     var pages = []
     const classes = useStyles()
     if (localStorage.getItem('isAdmin') === 'true') {
@@ -74,7 +74,7 @@ const Sidebar = props => {
             },
             {
                 title: 'Texts',
-                href: '/texts',
+                href: '/text',
                 icon: <TextFieldsIcon />
             },
             {
@@ -102,7 +102,7 @@ const Sidebar = props => {
             },
             {
                 title: 'Texts',
-                href: '/texts',
+                href: '/text',
                 icon: <TextFieldsIcon />
             },
             {
@@ -128,6 +128,7 @@ const Sidebar = props => {
 }
 
 Sidebar.propTypes = {
+    history: PropTypes.object,
     className: PropTypes.string,
     onClose: PropTypes.func,
     open: PropTypes.bool.isRequired,
