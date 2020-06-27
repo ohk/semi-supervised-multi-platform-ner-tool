@@ -38,51 +38,85 @@ const useStyles = makeStyles(theme => ({
 
 const Sidebar = props => {
     const { open, variant, onClose, className, ...rest } = props
-
+    var pages = []
     const classes = useStyles()
-
-    const pages = [
-        {
-            title: 'Dashboard',
-            href: '/dashboard',
-            icon: <DashboardIcon />
-        },
-        {
-            title: 'Users',
-            href: '/users',
-            icon: <PeopleIcon />
-        },
-        {
-            title: 'Authors',
-            href: '/authors',
-            icon: <CreateIcon />
-        },
-        {
-            title: 'Tag Types',
-            href: '/tagtypes',
-            icon: <LabelIcon />
-        },
-        {
-            title: 'Trains',
-            href: '/trains',
-            icon: <AutorenewIcon />
-        },
-        {
-            title: 'Texts',
-            href: '/texts',
-            icon: <TextFieldsIcon />
-        },
-        {
-            title: 'Settings',
-            href: '/settings',
-            icon: <SettingsIcon />
-        },
-        {
-            title: 'Logout',
-            href: '/',
-            icon: <ExitToAppIcon />
-        }
-    ]
+    if (localStorage.getItem('isAdmin') === true) {
+        pages = [
+            {
+                title: 'Dashboard',
+                href: '/dashboard',
+                icon: <DashboardIcon />
+            },
+            {
+                title: 'Users',
+                href: '/users',
+                icon: <PeopleIcon />
+            },
+            {
+                title: 'Authors',
+                href: '/authors',
+                icon: <CreateIcon />
+            },
+            {
+                title: 'Tag Types',
+                href: '/tagtypes',
+                icon: <LabelIcon />
+            },
+            {
+                title: 'Trains',
+                href: '/trains',
+                icon: <AutorenewIcon />
+            },
+            {
+                title: 'Add Text',
+                href: '/addText',
+                icon: <CreateIcon />
+            },
+            {
+                title: 'Texts',
+                href: '/texts',
+                icon: <TextFieldsIcon />
+            },
+            {
+                title: 'Settings',
+                href: '/settings',
+                icon: <SettingsIcon />
+            },
+            {
+                title: 'Logout',
+                href: '/',
+                icon: <ExitToAppIcon />
+            }
+        ]
+    } else {
+        pages = [
+            {
+                title: 'Dashboard',
+                href: '/dashboard',
+                icon: <DashboardIcon />
+            },
+            {
+                title: 'Add Text',
+                href: '/addText',
+                icon: <CreateIcon />
+            },
+            {
+                title: 'Texts',
+                href: '/texts',
+                icon: <TextFieldsIcon />
+            },
+            {
+                title: 'Settings',
+                href: '/settings',
+                icon: <SettingsIcon />
+            },
+            {
+                title: 'Logout',
+                href: '/',
+                icon: <ExitToAppIcon />
+            }
+        ]
+    }
 
     return (
         <Drawer anchor="left" classes={{ paper: classes.drawer }} onClose={onClose} open={open} variant={variant}>
