@@ -17,6 +17,7 @@ router.post('/add', verify, async (req, res) => {
         fs.outputFileSync(filename, req.body.content)
 
         text = await DB.Text.add({
+            title: req.body.title,
             path: filename,
             userID: req.userid.id,
             type: 1
@@ -48,7 +49,7 @@ router.post('/add', verify, async (req, res) => {
             }
             await DB.Tag.addRecord(records)
             result = await DB.Tag.getTextTag({ textid })
-            return res.status(200).send(result)
+            return res.status(200).send({ status: true, textid: textid })
         })
     } catch (error) {
         console.log(error)
@@ -60,7 +61,9 @@ router.get('/list', async (req, res) => {
     try {
         data = {}
         page = parseInt(req.query.page || 0)
-        data.offset = page * 15
+        rows = parseInt(req.query.rows || 15)
+        data.offset = page * rows
+        data.rows = rows
         result = await DB.Text.list(data)
         res.status(200).send(result)
     } catch (error) {
