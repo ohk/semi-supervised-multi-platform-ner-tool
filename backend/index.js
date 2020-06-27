@@ -72,15 +72,14 @@ schedule.scheduleJob('0 10 * * *', async () => {
 dotenv.config()
 
 const app = express()
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ limit: '200mb', extended: true, parameterLimit: 1000000 }))
 app.use(cors())
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: '200mb' }))
 app.use(bodyParser.raw())
 app.use(useragent.express())
 app.use(morgan('combined'))
 app.use(helmet())
 app.use(expressip().getIpInfoMiddleware)
-
 /**
  *
  * Import Routes
