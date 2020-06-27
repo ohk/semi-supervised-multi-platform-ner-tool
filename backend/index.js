@@ -15,6 +15,7 @@ const helmet = require('helmet')
  * ITS crawl everyday
  */
 schedule.scheduleJob('0 10 * * *', async () => {
+    console.log('Tarama işlemi başladı.')
     try {
         var authors = await DB.Author.get()
         if (authors.status === true) {
