@@ -86,9 +86,15 @@ getTextTag = async (data) => {
                 'SELECT * FROM( SELECT DISTINCT ON (words.wordid)  words.wordid, words.word, tt.tagtypeid, tt.tagname,words.createdat FROM (SELECT w.wordid, w.word,w.createdat FROM text t, word w WHERE t.textid = $1 AND w.textid = t.textid) words, tagcount tc, tagtype tt WHERE tc.count = (SELECT MAX(count) FROM tagcount WHERE wordid = words.wordid) AND tc.wordid = words.wordid AND tt.tagtypeid = tc.tagtypeid) t ORDER BY t.createdat',
             values: [data.textid]
         }
-        type = await conneciton.query(query)
-        if (type.rowCount != 0) {
-            return { status: true, data: type.rows }
+        tags = await conneciton.query(query)
+
+        const queryT = {
+            text: 'SELECT * FROM tagtype'
+        }
+        types = await conneciton.query(queryT)
+
+        if (types.rowCount != 0 && tags.rowCount != 0) {
+            return { status: true, data: { text: tags.rows, types: types.rows } }
         } else {
             return { status: false, message: 'Query error, please try again' }
         }
