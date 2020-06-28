@@ -277,11 +277,11 @@ blockUser = async (paramid) => {
     try {
         var conneciton = pool.getPool()
         const query = {
-            text: 'UPDATE users SET  role=-1 WHERE userid = $1',
+            text: 'UPDATE users SET role=-1 WHERE userid = $1',
             values: [paramid]
         }
-        user = await conneciton.query(query)
-        if (admin.rowCount == 1) {
+        block = await conneciton.query(query)
+        if (block.rowCount == 1) {
             return { status: true, message: 'User Blocked' }
         } else {
             return { status: false, message: 'Error' }
@@ -295,13 +295,32 @@ makeAdmin = async (paramid) => {
     try {
         var conneciton = pool.getPool()
         const query = {
-            text: 'UPDATE users SET  role=0 WHERE userid = $1',
+            text: 'UPDATE users SET role=0 WHERE userid = $1',
             values: [paramid]
         }
         console.log(query)
-        user = await conneciton.query(query)
+        admin = await conneciton.query(query)
         if (admin.rowCount == 1) {
             return { status: true, message: 'User Admin' }
+        } else {
+            return { status: false, message: 'Error' }
+        }
+    } catch (error) {
+        return { status: false, message: error }
+    }
+}
+
+makeUser = async (paramid) => {
+    try {
+        var conneciton = pool.getPool()
+        const query = {
+            text: 'UPDATE users SET role=1 WHERE userid = $1',
+            values: [paramid]
+        }
+        console.log(query)
+        admin = await conneciton.query(query)
+        if (admin.rowCount == 1) {
+            return { status: true, message: 'User now user' }
         } else {
             return { status: false, message: 'Error' }
         }
@@ -319,5 +338,6 @@ module.exports = {
     isUserAdmin,
     list,
     blockUser,
-    makeAdmin
+    makeAdmin,
+    makeUser
 }
