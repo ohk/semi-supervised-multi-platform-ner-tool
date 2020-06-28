@@ -8,8 +8,8 @@ router.get('/getUsers', verify, async (req, res) => {
         if (isUserAdmin.status === true) {
             data = {}
             page = parseInt(req.query.page || 0)
-            row = parseInt(req.query.row || 15)
-            data.row = row
+            row = parseInt(req.query.rows || 15)
+            data.rows = row
             data.offset = page * row
             result = await DB.User.list(data)
             res.status(200).send(result)
@@ -26,7 +26,9 @@ router.get('/getAuthors', verify, async (req, res) => {
         if (isUserAdmin.status === true) {
             data = {}
             page = parseInt(req.query.page || 0)
-            data.offset = page * 15
+            row = parseInt(req.query.rows || 15)
+            data.rows = row
+            data.offset = page * row
             result = await DB.Author.list(data)
             res.status(200).send(result)
         } else {
@@ -54,7 +56,12 @@ router.get('/getTagTypes', verify, async (req, res) => {
     try {
         isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
         if (isUserAdmin.status === true) {
-            result = await DB.Tag.listTagTypes()
+            data = {}
+            page = parseInt(req.query.page || 0)
+            row = parseInt(req.query.rows || 15)
+            data.rows = row
+            data.offset = page * row
+            result = await DB.Tag.listTagTypes(data)
             res.status(200).send(result)
         } else {
             res.status(401).send('Only for admin')
@@ -109,7 +116,7 @@ router.post('/blockAuthor', verify, async (req, res) => {
     try {
         isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
         if (isUserAdmin.status === true) {
-            result = await DB.Author.block(req.body)
+            result = await DB.Author.block(req.query.paramid)
             res.status(200).send(result)
         } else {
             res.status(401).send('Only for admin')
@@ -164,7 +171,7 @@ router.post('/unblockAuthor', verify, async (req, res) => {
     try {
         isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
         if (isUserAdmin.status === true) {
-            result = await DB.Author.unblock(req.body)
+            result = await DB.Author.unblock(req.query.paramid)
             res.status(200).send(result)
         } else {
             res.status(401).send('Only for admin')
