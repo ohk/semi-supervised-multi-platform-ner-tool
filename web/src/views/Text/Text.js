@@ -93,7 +93,7 @@ const Text = props => {
             .then(response => {
                 if (response.status === 200) {
                     setData(response.data.data)
-                    setDcount(response.data.count)
+                    setDcount(parseInt(response.data.count))
                     setFetchState(true)
                 }
             })
