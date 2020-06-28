@@ -336,18 +336,6 @@ const Tags = props => {
                             </div>
                         ))}
                     </Card>
-
-                    <CardActions className={classes.actions}>
-                        <TablePagination
-                            component="div"
-                            count={dCount}
-                            onChangePage={handlePageChange}
-                            onChangeRowsPerPage={handleRowsPerPageChange}
-                            page={page}
-                            rowsPerPage={rowsPerPage}
-                            rowsPerPageOptions={[15, 25, 50]}
-                        />
-                    </CardActions>
                 </div>
             </Hidden>
         </div>
