@@ -137,8 +137,21 @@ router.post('/makeAdmin', verify, async (req, res) => {
     try {
         isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
         if (isUserAdmin.status === true) {
-            console.log(req)
             result = await DB.User.makeAdmin(req.query.paramid)
+            res.status(200).send(result)
+        } else {
+            res.status(401).send('Only for admin')
+        }
+    } catch (error) {
+        res.status(400).send({ status: false, error: error })
+    }
+})
+
+router.post('/makeUser', verify, async (req, res) => {
+    try {
+        isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
+        if (isUserAdmin.status === true) {
+            result = await DB.User.makeUser(req.query.paramid)
             res.status(200).send(result)
         } else {
             res.status(401).send('Only for admin')
