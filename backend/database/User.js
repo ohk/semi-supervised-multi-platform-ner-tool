@@ -259,13 +259,54 @@ list = async (data) => {
         var conneciton = pool.getPool()
         const query = {
             text:
-                'SELECT userid,name,surname,username,email,role,textcount,requestcount,validation FROM users ORDER BY createdat DESC LIMIT 15 OFFSET $1',
-            values: [data.offset]
+                'SELECT userid,name,surname,username,email,role,textcount,requestcount,validation FROM users ORDER BY createdat DESC LIMIT $1 OFFSET $2',
+            values: [data.rows, data.offset]
         }
         user = await conneciton.query(query)
-        return { status: true, data: user.rows }
+        const queryC = {
+            text: 'SELECT COUNT(*) FROM users'
+        }
+        count = await conneciton.query(queryC)
+        return { status: true, data: user.rows, count: count.rows[0].count }
     } catch (error) {
         return { status: false, data: [] }
+    }
+}
+
+blockUser = async (paramid) => {
+    try {
+        var conneciton = pool.getPool()
+        const query = {
+            text: 'UPDATE users SET  role=-1 WHERE userid = $1',
+            values: [paramid]
+        }
+        user = await conneciton.query(query)
+        if (admin.rowCount == 1) {
+            return { status: true, message: 'User Blocked' }
+        } else {
+            return { status: false, message: 'Error' }
+        }
+    } catch (error) {
+        return { status: false, message: error }
+    }
+}
+
+makeAdmin = async (paramid) => {
+    try {
+        var conneciton = pool.getPool()
+        const query = {
+            text: 'UPDATE users SET  role=0 WHERE userid = $1',
+            values: [paramid]
+        }
+        console.log(query)
+        user = await conneciton.query(query)
+        if (admin.rowCount == 1) {
+            return { status: true, message: 'User Admin' }
+        } else {
+            return { status: false, message: 'Error' }
+        }
+    } catch (error) {
+        return { status: false, message: error }
     }
 }
 module.exports = {
@@ -276,5 +317,7 @@ module.exports = {
     forgot,
     login,
     isUserAdmin,
-    list
+    list,
+    blockUser,
+    makeAdmin
 }
