@@ -8,7 +8,9 @@ router.get('/getUsers', verify, async (req, res) => {
         if (isUserAdmin.status === true) {
             data = {}
             page = parseInt(req.query.page || 0)
-            data.offset = page * 15
+            row = parseInt(req.query.row || 15)
+            data.row = row
+            data.offset = page * row
             result = await DB.User.list(data)
             res.status(200).send(result)
         } else {
@@ -108,6 +110,35 @@ router.post('/blockAuthor', verify, async (req, res) => {
         isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
         if (isUserAdmin.status === true) {
             result = await DB.Author.block(req.body)
+            res.status(200).send(result)
+        } else {
+            res.status(401).send('Only for admin')
+        }
+    } catch (error) {
+        res.status(400).send({ status: false, error: error })
+    }
+})
+
+router.post('/blockUser', verify, async (req, res) => {
+    try {
+        isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
+        if (isUserAdmin.status === true) {
+            result = await DB.User.blockUser(req.query.paramid)
+            res.status(200).send(result)
+        } else {
+            res.status(401).send('Only for admin')
+        }
+    } catch (error) {
+        res.status(400).send({ status: false, error: error })
+    }
+})
+
+router.post('/makeAdmin', verify, async (req, res) => {
+    try {
+        isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
+        if (isUserAdmin.status === true) {
+            console.log(req)
+            result = await DB.User.makeAdmin(req.query.paramid)
             res.status(200).send(result)
         } else {
             res.status(401).send('Only for admin')
