@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import PropTypes from 'prop-types'
 import axios from 'axios'
@@ -8,8 +8,6 @@ import {
     Card,
     CardActions,
     CardContent,
-    Avatar,
-    Checkbox,
     Link,
     Table,
     TableBody,
@@ -18,19 +16,22 @@ import {
     TableRow,
     Typography,
     TablePagination,
-    Button
+    Button,
+    Hidden
 } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
     root: {
         padding: theme.spacing(4)
     },
+
     button: {
-        marginRight: theme.spacing(1),
-        float: 'right'
+        float: 'right',
+        display: 'block',
+        padding: 10
     },
     content: {
-        padding: 0
+        padding: 10
     },
     inner: {
         minWidth: 1050
@@ -51,8 +52,20 @@ const useStyles = makeStyles(theme => ({
     nameC: {
         'text-transform': 'capitalize'
     },
-    addTextbtn: {
-        float: 'right'
+    title: {
+        fontSize: 14
+    },
+    pos: {
+        marginBottom: 12
+    },
+    row: {
+        height: '42px',
+        display: 'flex',
+        alignItems: 'center',
+        marginTop: theme.spacing(1)
+    },
+    spacer: {
+        flexGrow: 1
     }
 }))
 
@@ -103,74 +116,130 @@ const Text = props => {
     console.log(data)
     return (
         <div className={classes.content}>
-            <Card className={classes.root}>
-                <div className={classes.row}>
-                    <span className={classes.spacer} />
-                    <Link component={RouterLink} to={'/addText'}>
-                        <Button color="primary" variant="contained" className={classes.addTextbtn}>
-                            Add Text
-                        </Button>
-                    </Link>
-                </div>
-                <CardContent className={classes.content}>
-                    <PerfectScrollbar>
-                        <div className={classes.content}>
-                            <div className={classes.inner}>
-                                {
-                                    <Table>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell>Title</TableCell>
-                                                <TableCell>Author</TableCell>
-                                                <TableCell>Tag Count</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {data.map(text => (
-                                                <TableRow className={classes.tableRow} hover key={text.textid}>
-                                                    <TableCell>
-                                                        <div className={classes.nameContainer}>
-                                                            <Link
-                                                                component={RouterLink}
-                                                                to={'/text/' + text.textid}
-                                                                variant="h6"
-                                                            >
-                                                                {text.title}
-                                                            </Link>
-                                                        </div>
-                                                    </TableCell>
+            <Hidden only={['xs', 'sm']}>
+                <Card className={classes.root}>
+                    <div className={classes.row}>
+                        <span className={classes.spacer} />
+                        <Link component={RouterLink} to={'/addText'} variant="h6">
+                            <Button color="primary" variant="contained">
+                                Add Text
+                            </Button>
+                        </Link>
+                    </div>
+                    <CardContent className={classes.content}>
+                        <span className={classes.spacer} />
 
-                                                    {text.authorname === 'root' ? (
-                                                        <TableCell className={classes.nameC}>
-                                                            {text.name + ' ' + text.surname}
-                                                        </TableCell>
-                                                    ) : (
-                                                        <TableCell className={classes.nameC}>
-                                                            {text.authorname}
-                                                        </TableCell>
-                                                    )}
-                                                    <TableCell>{text.tagcount}</TableCell>
+                        <PerfectScrollbar>
+                            <div className={classes.content}>
+                                <div className={classes.inner}>
+                                    {
+                                        <Table>
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell>Title</TableCell>
+                                                    <TableCell>Author</TableCell>
+                                                    <TableCell>Tag Count</TableCell>
                                                 </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                }
-                                <CardActions className={classes.actions}>
-                                    <TablePagination
-                                        component="div"
-                                        count={dCount}
-                                        onChangePage={handlePageChange}
-                                        onChangeRowsPerPage={handleRowsPerPageChange}
-                                        page={page}
-                                        rowsPerPage={rowsPerPage}
-                                        rowsPerPageOptions={[15, 25, 50]}
-                                    />
-                                </CardActions>
+                                            </TableHead>
+                                            <TableBody>
+                                                {data.map(text => (
+                                                    <TableRow className={classes.tableRow} hover key={text.textid}>
+                                                        <TableCell>
+                                                            <div className={classes.nameContainer}>
+                                                                <Link
+                                                                    component={RouterLink}
+                                                                    to={'/text/' + text.textid}
+                                                                    variant="h6"
+                                                                >
+                                                                    {text.title}
+                                                                </Link>
+                                                            </div>
+                                                        </TableCell>
+
+                                                        {text.authorname === 'root' ? (
+                                                            <TableCell className={classes.nameC}>
+                                                                {text.name + ' ' + text.surname}
+                                                            </TableCell>
+                                                        ) : (
+                                                            <TableCell className={classes.nameC}>
+                                                                {text.authorname}
+                                                            </TableCell>
+                                                        )}
+                                                        <TableCell>{text.tagcount}</TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    }
+                                    <CardActions className={classes.actions}>
+                                        <TablePagination
+                                            component="div"
+                                            count={dCount}
+                                            onChangePage={handlePageChange}
+                                            onChangeRowsPerPage={handleRowsPerPageChange}
+                                            page={page}
+                                            rowsPerPage={rowsPerPage}
+                                            rowsPerPageOptions={[15, 25, 50]}
+                                        />
+                                    </CardActions>
+                                </div>
                             </div>
+                        </PerfectScrollbar>
+                    </CardContent>
+                </Card>
+            </Hidden>
+            <Hidden only={['md', 'xl', 'lg']}>
+                <div>
+                    <Card className={classes.root} variant="outlined">
+                        <div className={classes.row}>
+                            <span className={classes.spacer} />
+                            <Link component={RouterLink} to={'/addText'} variant="h6">
+                                <Button color="primary" variant="contained">
+                                    Add Text
+                                </Button>
+                            </Link>
                         </div>
-                    </PerfectScrollbar>
-                </CardContent>
-            </Card>
+                        {data.map(text => (
+                            <div>
+                                <span className={classes.spacer} />
+                                <CardContent className={classes.content}>
+                                    <Typography variant="h5" component="h2">
+                                        <Link component={RouterLink} to={'/text/' + text.textid} variant="h6">
+                                            {text.title}
+                                        </Link>
+                                    </Typography>
+
+                                    {text.authorname === 'root' ? (
+                                        <Typography className={classes.nameC} color="textSecondary">
+                                            {text.name + ' ' + text.surname}
+                                        </Typography>
+                                    ) : (
+                                        <Typography className={classes.nameC} color="textSecondary">
+                                            {text.authorname}
+                                        </Typography>
+                                    )}
+
+                                    <Typography variant="body2" component="p">
+                                        Total Tag Count: {text.tagcount}
+                                    </Typography>
+                                </CardContent>
+                            </div>
+                        ))}
+                    </Card>
+
+                    <CardActions className={classes.actions}>
+                        <TablePagination
+                            component="div"
+                            count={dCount}
+                            onChangePage={handlePageChange}
+                            onChangeRowsPerPage={handleRowsPerPageChange}
+                            page={page}
+                            rowsPerPage={rowsPerPage}
+                            rowsPerPageOptions={[15, 25, 50]}
+                        />
+                    </CardActions>
+                </div>
+            </Hidden>
         </div>
     )
 }
