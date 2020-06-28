@@ -103,15 +103,20 @@ getTextTag = async (data) => {
     }
 }
 
-listTagTypes = async () => {
+listTagTypes = async (data) => {
     try {
         var conneciton = pool.getPool()
         const query = {
-            text: 'SELECT * FROM tagtype'
+            text: 'SELECT * FROM tagtype ORDER BY tagtypeid ASC LIMIT $1 OFFSET $2',
+            values: [data.rows, data.offset]
         }
         type = await conneciton.query(query)
+        const queryC = {
+            text: 'SELECT COUNT(*) FROM tagtype'
+        }
+        count = await conneciton.query(queryC)
         if (type.rowCount != 0) {
-            return { status: true, data: type.rows }
+            return { status: true, data: type.rows, count: count.rows[0].count }
         } else {
             return { status: false, message: 'Query error, please try again' }
         }
