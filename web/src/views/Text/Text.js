@@ -30,9 +30,6 @@ const useStyles = makeStyles(theme => ({
         display: 'block',
         padding: 10
     },
-    content: {
-        padding: 10
-    },
     inner: {
         minWidth: 1050
     },
@@ -47,7 +44,8 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'flex-end'
     },
     content: {
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(2),
+        padding: 10
     },
     nameC: {
         'text-transform': 'capitalize'

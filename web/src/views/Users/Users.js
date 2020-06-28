@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import { Link as RouterLink, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import DoneIcon from '@material-ui/icons/Done'
 import CloseIcon from '@material-ui/icons/Close'
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount'
@@ -15,7 +15,6 @@ import {
     Card,
     CardActions,
     CardContent,
-    Link,
     Table,
     TableBody,
     TableCell,
@@ -41,9 +40,6 @@ const useStyles = makeStyles(theme => ({
         display: 'block',
         padding: 10
     },
-    content: {
-        padding: 10
-    },
     inner: {
         minWidth: 1050
     },
@@ -58,7 +54,8 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'flex-end'
     },
     content: {
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(2),
+        padding: 10
     },
     nameC: {
         'text-transform': 'capitalize'
@@ -88,7 +85,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const Text = props => {
+const Users = props => {
     const { history } = props
     const classes = useStyles()
     const [fetchState, setFetchState] = useState(false)
@@ -210,7 +207,6 @@ const Text = props => {
                 setFetchState(false)
             })
     }
-
     const makeAdminM = event => {
         const id = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute('id')
         axios
@@ -364,14 +360,6 @@ const Text = props => {
             </Snackbar>
             <Hidden only={['xs', 'sm']}>
                 <Card className={classes.root}>
-                    <div className={classes.row}>
-                        <span className={classes.spacer} />
-                        <Link component={RouterLink} to={'/addText'} variant="h6">
-                            <Button color="primary" variant="contained">
-                                Add Text
-                            </Button>
-                        </Link>
-                    </div>
                     <CardContent className={classes.content}>
                         <span className={classes.spacer} />
 
@@ -466,7 +454,7 @@ const Text = props => {
                                                                     }}
                                                                 >
                                                                     <PersonIcon />
-                                                                    makeUser
+                                                                    User
                                                                 </Button>
                                                             </TableCell>
                                                         ) : (
@@ -619,7 +607,7 @@ const Text = props => {
                                                         }}
                                                     >
                                                         <PersonIcon />
-                                                        makeUser
+                                                        User
                                                     </Button>
                                                 </TableCell>
                                             </TableRow>
@@ -676,8 +664,8 @@ const Text = props => {
     )
 }
 
-Text.propTypes = {
+Users.propTypes = {
     history: PropTypes.object
 }
 
-export default withRouter(Text)
+export default withRouter(Users)
