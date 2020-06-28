@@ -17,6 +17,7 @@ import {
     Text as TextView,
     Texts as TextsView,
     AddText as AddTextView,
+    AddTag as AddTagView,
     AddAuthor as AddAuthorView,
     Tags as TagsView,
     Unauthorized as UnauthorizedView,
@@ -33,6 +34,7 @@ const Routes = () => {
             <RouteWithLayout component={TextsView} exact layout={MainLayout} path="/text" />
             <RouteWithLayout component={TextView} exact layout={MainLayout} path="/text/*" />
             <RouteWithLayout component={AddTextView} exact layout={MainLayout} path="/addText" />
+            <RouteWithLayout component={AddTagView} exact layout={MainLayout} path="/addTag" />
             <RouteWithLayout component={AddAuthorView} exact layout={MainLayout} path="/addAuthor" />
             <RouteWithLayout component={TagsView} exact layout={MainLayout} path="/tags" />
             <RouteWithLayout component={SignUpView} exact layout={MinimalLayout} path="/sign-up" />
