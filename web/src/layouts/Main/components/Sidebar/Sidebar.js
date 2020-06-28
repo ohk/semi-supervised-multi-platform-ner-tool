@@ -59,7 +59,7 @@ const Sidebar = props => {
             },
             {
                 title: 'Tag Types',
-                href: '/tagtypes',
+                href: '/tags',
                 icon: <LabelIcon />
             },
             {
