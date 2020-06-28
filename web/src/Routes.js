@@ -7,7 +7,6 @@ import { Main as MainLayout, Minimal as MinimalLayout } from './layouts'
 import {
     Dashboard as DashboardView,
     UserList as UserListView,
-    Account as AccountView,
     Settings as SettingsView,
     SignUp as SignUpView,
     SignIn as SignInView,
@@ -16,7 +15,8 @@ import {
     ForgotPassword as ForgotView,
     Text as TextView,
     Texts as TextsView,
-    AddText as addTextView,
+    AddText as AddTextView,
+    Tags as TagsView,
     Unauthorized as UnauthorizedView,
     NotFound as NotFoundView
 } from './views'
@@ -26,11 +26,11 @@ const Routes = () => {
         <Switch>
             <RouteWithLayout component={DashboardView} exact layout={MainLayout} path="/dashboard" />
             <RouteWithLayout component={UserListView} exact layout={MainLayout} path="/users" />
-            <RouteWithLayout component={AccountView} exact layout={MainLayout} path="/account" />
             <RouteWithLayout component={SettingsView} exact layout={MainLayout} path="/settings" />
             <RouteWithLayout component={TextsView} exact layout={MainLayout} path="/text" />
             <RouteWithLayout component={TextView} exact layout={MainLayout} path="/text/*" />
-            <RouteWithLayout component={addTextView} exact layout={MainLayout} path="/addText" />
+            <RouteWithLayout component={AddTextView} exact layout={MainLayout} path="/addText" />
+            <RouteWithLayout component={TagsView} exact layout={MainLayout} path="/tags" />
             <RouteWithLayout component={SignUpView} exact layout={MinimalLayout} path="/sign-up" />
             <RouteWithLayout component={SignInView} exact layout={MinimalLayout} path="/" />
             <RouteWithLayout component={ValidateView} exact layout={MinimalLayout} path="/validate/*" />
