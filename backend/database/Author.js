@@ -4,11 +4,15 @@ list = async (data) => {
     try {
         var conneciton = pool.getPool()
         const query = {
-            text: 'SELECT * FROM author ORDER BY authorid ASC LIMIT 15 OFFSET $1',
-            values: [data.offset]
+            text: 'SELECT * FROM author WHERE authorid != 1 ORDER BY authorid ASC LIMIT $1 OFFSET $2',
+            values: [data.rows, data.offset]
         }
         authors = await conneciton.query(query)
-        return { status: true, data: authors.rows }
+        const queryC = {
+            text: 'SELECT COUNT(*) FROM author'
+        }
+        count = await conneciton.query(queryC)
+        return { status: true, data: authors.rows, count: count.rows[0].count }
     } catch (error) {
         return { status: false, data: [] }
     }
@@ -54,12 +58,12 @@ add = async (data) => {
     }
 }
 
-block = async (data) => {
+block = async (authorid) => {
     try {
         var conneciton = pool.getPool()
         const blockQ = {
-            text: 'UPDATE author SET crawl = false WHERE authorid= ($1)',
-            values: [data.authorid]
+            text: 'UPDATE author SET crawl = false WHERE authorid= $1',
+            values: [authorid]
         }
         block = await conneciton.query(blockQ)
         if (block.rowCount != 0) {
@@ -72,12 +76,12 @@ block = async (data) => {
     }
 }
 
-unblock = async (data) => {
+unblock = async (authorid) => {
     try {
         var conneciton = pool.getPool()
         const blockQ = {
-            text: 'UPDATE author SET crawl = true WHERE authorid= ($1)',
-            values: [data.authorid]
+            text: 'UPDATE author SET crawl = true WHERE authorid= $1',
+            values: [authorid]
         }
         block = await conneciton.query(blockQ)
         if (block.rowCount != 0) {
