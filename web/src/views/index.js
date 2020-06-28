@@ -1,4 +1,6 @@
 export { default as AddText } from './AddText'
+export { default as AddAuthor } from './AddAuthor'
+export { default as Authors } from './Authors'
 export { default as Dashboard } from './Dashboard'
 export { default as ForgotPassword } from './ForgotPassword'
 export { default as NotFound } from './NotFound'
