@@ -9,6 +9,8 @@ import CloseIcon from '@material-ui/icons/Close'
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount'
 import PermIdentityIcon from '@material-ui/icons/PermIdentity'
 import PersonIcon from '@material-ui/icons/Person'
+import MuiAlert from '@material-ui/lab/Alert'
+
 import {
     Card,
     CardActions,
@@ -21,8 +23,13 @@ import {
     TableRow,
     TablePagination,
     Button,
-    Hidden
+    Hidden,
+    Snackbar
 } from '@material-ui/core'
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />
+}
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -76,7 +83,8 @@ const useStyles = makeStyles(theme => ({
     },
     table: {
         'margin-bottom': '1.5rem',
-        border: '1px solid #EEEEEE'
+        border: '1px solid #EEEEEE',
+        display: 'table'
     }
 }))
 
@@ -89,9 +97,13 @@ const Text = props => {
     const [page, setPage] = useState(0)
     const [dCount, setDcount] = useState(100)
     const [mes, setMes] = useState('')
+    const [open, setOpen] = React.useState(false)
+    const [severe, setSevere] = useState('')
     try {
         if (localStorage.getItem('token').length < 0) {
             history.push('/')
+        } else if (localStorage.getItem('isAdmin') === 'false') {
+            history.push('/unauthorized')
         }
     } catch (error) {
         history.push('/')
@@ -111,7 +123,7 @@ const Text = props => {
             .then(response => {
                 if (response.status === 200) {
                     setData(response.data.data)
-                    setDcount(response.data.count)
+                    setDcount(parseInt(response.data.count))
                     setFetchState(true)
                 }
             })
@@ -129,7 +141,7 @@ const Text = props => {
         setRowsPerPage(event.target.value)
         setFetchState(false)
     }
-    const unblock = event => {}
+
     const makeAdmin = event => {
         const id = event.target.parentNode.parentNode.parentNode.getAttribute('id')
         axios
@@ -144,30 +156,212 @@ const Text = props => {
                 }
             )
             .then(response => {
-                console.log(response.data.status === false)
+                console.log(response.data)
                 if (response.data.status === true) {
-                    console.log('Admin Yapıldı', response)
+                    setMes(response.data.message)
+                    setSevere('success')
+                    setOpen(true)
+                    setFetchState(false)
                 } else {
-                    console.log('Admin Yapılamadı', response)
+                    setMes(response.data.message)
+                    setSevere('error')
+                    setOpen(true)
+                    setFetchState(false)
                 }
             })
             .catch(error => {
-                console.log(error.response)
+                setMes(error.response.data.message)
+                setSevere('error')
+                setOpen(true)
+                setFetchState(false)
             })
     }
     const blockUser = event => {
         const id = event.target.parentNode.parentNode.parentNode.getAttribute('id')
+        axios
+            .post(
+                global.config.API_ENDPOINT + '/system/blockUser',
+                {},
+                {
+                    params: { paramid: id },
+                    headers: {
+                        token: localStorage.getItem('token')
+                    }
+                }
+            )
+            .then(response => {
+                console.log(response.data)
+                if (response.data.status === true) {
+                    setMes(response.data.message)
+                    setSevere('success')
+                    setOpen(true)
+                    setFetchState(false)
+                } else {
+                    setMes(response.data.message)
+                    setSevere('error')
+                    setOpen(true)
+                    setFetchState(false)
+                }
+            })
+            .catch(error => {
+                setMes(error.response.data.message)
+                setSevere('error')
+                setOpen(true)
+                setFetchState(false)
+            })
     }
 
     const makeAdminM = event => {
         const id = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute('id')
+        axios
+            .post(
+                global.config.API_ENDPOINT + '/system/makeAdmin',
+                {},
+                {
+                    params: { paramid: id },
+                    headers: {
+                        token: localStorage.getItem('token')
+                    }
+                }
+            )
+            .then(response => {
+                console.log(response.data)
+                if (response.data.status === true) {
+                    setMes(response.data.message)
+                    setSevere('success')
+                    setOpen(true)
+                    setFetchState(false)
+                } else {
+                    setMes(response.data.message)
+                    setSevere('error')
+                    setOpen(true)
+                    setFetchState(false)
+                }
+            })
+            .catch(error => {
+                setMes(error.response.data.message)
+                setSevere('error')
+                setOpen(true)
+                setFetchState(false)
+            })
     }
     const blockUserM = event => {
         const id = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute('id')
+        axios
+            .post(
+                global.config.API_ENDPOINT + '/system/blockUser',
+                {},
+                {
+                    params: { paramid: id },
+                    headers: {
+                        token: localStorage.getItem('token')
+                    }
+                }
+            )
+            .then(response => {
+                console.log(response.data)
+                if (response.data.status === true) {
+                    setMes(response.data.message)
+                    setSevere('success')
+                    setOpen(true)
+                    setFetchState(false)
+                } else {
+                    setMes(response.data.message)
+                    setSevere('error')
+                    setOpen(true)
+                    setFetchState(false)
+                }
+            })
+            .catch(error => {
+                setMes(error.response.data.message)
+                setSevere('error')
+                setOpen(true)
+                setFetchState(false)
+            })
     }
-    console.log(data)
+    const makeUserM = event => {
+        const id = event.target.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute('id')
+        axios
+            .post(
+                global.config.API_ENDPOINT + '/system/makeUser',
+                {},
+                {
+                    params: { paramid: id },
+                    headers: {
+                        token: localStorage.getItem('token')
+                    }
+                }
+            )
+            .then(response => {
+                console.log(response.data)
+                if (response.data.status === true) {
+                    setMes(response.data.message)
+                    setSevere('success')
+                    setOpen(true)
+                    setFetchState(false)
+                } else {
+                    setMes(response.data.message)
+                    setSevere('error')
+                    setOpen(true)
+                    setFetchState(false)
+                }
+            })
+            .catch(error => {
+                setMes(error.response.data.message)
+                setSevere('error')
+                setOpen(true)
+                setFetchState(false)
+            })
+    }
+    const makeUser = event => {
+        const id = event.target.parentNode.parentNode.parentNode.getAttribute('id')
+        axios
+            .post(
+                global.config.API_ENDPOINT + '/system/makeUser',
+                {},
+                {
+                    params: { paramid: id },
+                    headers: {
+                        token: localStorage.getItem('token')
+                    }
+                }
+            )
+            .then(response => {
+                console.log(response.data)
+                if (response.data.status === true) {
+                    setMes(response.data.message)
+                    setSevere('success')
+                    setOpen(true)
+                    setFetchState(false)
+                } else {
+                    setMes(response.data.message)
+                    setSevere('error')
+                    setOpen(true)
+                    setFetchState(false)
+                }
+            })
+            .catch(error => {
+                setMes(error.response.data.message)
+                setSevere('error')
+                setOpen(true)
+                setFetchState(false)
+            })
+    }
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return
+        }
+
+        setOpen(false)
+    }
+
     return (
         <div className={classes.content}>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={severe}>
+                    {mes}
+                </Alert>
+            </Snackbar>
             <Hidden only={['xs', 'sm']}>
                 <Card className={classes.root}>
                     <div className={classes.row}>
@@ -240,41 +434,18 @@ const Text = props => {
                                                                 <CloseIcon />
                                                             </TableCell>
                                                         )}
-                                                        <TableCell className={classes.tablecell}>
-                                                            {user.role === 1 ? (
-                                                                <div>
-                                                                    <Button
-                                                                        color="primary"
-                                                                        variant="contained"
-                                                                        onClick={e => {
-                                                                            makeAdmin(e)
-                                                                        }}
-                                                                    >
-                                                                        <SupervisorAccountIcon />
-                                                                        Admin
-                                                                    </Button>
-                                                                    <Button
-                                                                        color="primary"
-                                                                        variant="contained"
-                                                                        onClick={e => {
-                                                                            blockUser(e)
-                                                                        }}
-                                                                    >
-                                                                        <PermIdentityIcon /> Block
-                                                                    </Button>
-                                                                </div>
-                                                            ) : user.role === -1 ? (
+                                                        {user.role === 1 ? (
+                                                            <TableCell className={classes.tablecell}>
                                                                 <Button
                                                                     color="primary"
                                                                     variant="contained"
                                                                     onClick={e => {
-                                                                        unblock(e)
+                                                                        makeAdmin(e)
                                                                     }}
                                                                 >
-                                                                    <PersonIcon />
-                                                                    Unblock
+                                                                    <SupervisorAccountIcon />
+                                                                    Admin
                                                                 </Button>
-                                                            ) : (
                                                                 <Button
                                                                     color="primary"
                                                                     variant="contained"
@@ -284,8 +455,42 @@ const Text = props => {
                                                                 >
                                                                     <PermIdentityIcon /> Block
                                                                 </Button>
-                                                            )}
-                                                        </TableCell>
+                                                            </TableCell>
+                                                        ) : user.role === -1 ? (
+                                                            <TableCell className={classes.tablecell}>
+                                                                <Button
+                                                                    color="primary"
+                                                                    variant="contained"
+                                                                    onClick={e => {
+                                                                        makeUser(e)
+                                                                    }}
+                                                                >
+                                                                    <PersonIcon />
+                                                                    makeUser
+                                                                </Button>
+                                                            </TableCell>
+                                                        ) : (
+                                                            <TableCell className={classes.tablecell}>
+                                                                <Button
+                                                                    color="primary"
+                                                                    variant="contained"
+                                                                    onClick={e => {
+                                                                        makeUser(e)
+                                                                    }}
+                                                                >
+                                                                    <PersonIcon /> User
+                                                                </Button>
+                                                                <Button
+                                                                    color="primary"
+                                                                    variant="contained"
+                                                                    onClick={e => {
+                                                                        blockUser(e)
+                                                                    }}
+                                                                >
+                                                                    <PermIdentityIcon /> Block
+                                                                </Button>
+                                                            </TableCell>
+                                                        )}
                                                     </TableRow>
                                                 ))}
                                             </TableBody>
@@ -369,32 +574,85 @@ const Text = props => {
                                                 </TableCell>
                                             )}
                                         </TableRow>
-                                        <TableRow className={classes.tableRow} hover>
-                                            <TableCell className={classes.tablecell}>
-                                                <Button
-                                                    color="primary"
-                                                    variant="contained"
-                                                    onClick={e => {
-                                                        makeAdminM(e)
-                                                    }}
-                                                >
-                                                    <SupervisorAccountIcon />
-                                                    Admin
-                                                </Button>
-                                            </TableCell>
-                                            <TableCell className={classes.tablecell}>
-                                                <Button
-                                                    color="primary"
-                                                    variant="contained"
-                                                    onClick={e => {
-                                                        blockUserM(e)
-                                                    }}
-                                                >
-                                                    <PermIdentityIcon /> Block
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow className={classes.tableRow} hover></TableRow>
+                                        {user.role === 1 ? (
+                                            <TableRow
+                                                className={classes.tableRow}
+                                                hover
+                                                style={{ 'justify-content': 'center' }}
+                                            >
+                                                <TableCell className={classes.tablecell}>
+                                                    <Button
+                                                        color="primary"
+                                                        variant="contained"
+                                                        onClick={e => {
+                                                            makeAdminM(e)
+                                                        }}
+                                                    >
+                                                        <SupervisorAccountIcon />
+                                                        Admin
+                                                    </Button>
+                                                </TableCell>
+                                                <TableCell className={classes.tablecell}>
+                                                    <Button
+                                                        color="primary"
+                                                        variant="contained"
+                                                        onClick={e => {
+                                                            blockUserM(e)
+                                                        }}
+                                                    >
+                                                        <PermIdentityIcon /> Block
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ) : user.role === -1 ? (
+                                            <TableRow
+                                                className={classes.tableRow}
+                                                hover
+                                                style={{ 'justify-content': 'center' }}
+                                            >
+                                                <TableCell className={classes.tablecell}>
+                                                    <Button
+                                                        color="primary"
+                                                        variant="contained"
+                                                        onClick={e => {
+                                                            makeUserM(e)
+                                                        }}
+                                                    >
+                                                        <PersonIcon />
+                                                        makeUser
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ) : (
+                                            <TableRow
+                                                className={classes.tableRow}
+                                                hover
+                                                style={{ 'justify-content': 'center' }}
+                                            >
+                                                <TableCell className={classes.tablecell}>
+                                                    <Button
+                                                        color="primary"
+                                                        variant="contained"
+                                                        onClick={e => {
+                                                            makeUserM(e)
+                                                        }}
+                                                    >
+                                                        <PersonIcon /> User
+                                                    </Button>
+                                                </TableCell>
+                                                <TableCell className={classes.tablecell}>
+                                                    <Button
+                                                        color="primary"
+                                                        variant="contained"
+                                                        onClick={e => {
+                                                            blockUserM(e)
+                                                        }}
+                                                    >
+                                                        <PermIdentityIcon /> Block
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
                                     </TableBody>
                                 </Table>
                             </div>
