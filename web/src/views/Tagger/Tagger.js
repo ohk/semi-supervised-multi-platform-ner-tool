@@ -176,9 +176,11 @@ const Tagger = props => {
                                 )
                             }
                         })}
-                        <Button color="primary" variant="contained" className={classes.button} onClick={saveClick}>
-                            Save
-                        </Button>
+                        <div>
+                            <Button color="primary" variant="contained" className={classes.button} onClick={saveClick}>
+                                Save
+                            </Button>
+                        </div>
                     </div>
                 ) : (
                     <div>Loading...</div>
