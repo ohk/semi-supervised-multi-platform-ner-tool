@@ -1,20 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Link as RouterLink, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import validate from 'validate.js'
 import { makeStyles } from '@material-ui/styles'
-import {
-    Grid,
-    Button,
-    IconButton,
-    TextField,
-    Link,
-    FormHelperText,
-    Checkbox,
-    Typography,
-    Textarea
-} from '@material-ui/core'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import { Grid, Button, TextField, Typography } from '@material-ui/core'
 import axios from 'axios'
 
 import MuiAlert from '@material-ui/lab/Alert'
@@ -198,9 +187,7 @@ const AddText = props => {
             )
             .then(response => {
                 console.log(response)
-                if (response.status === 200) {
-                    setCreateState(true)
-                }
+                setCreateState(true)
                 setTimeout(() => {
                     history.push('/text/' + response.data.textid)
                 }, 3000)
