@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Link as RouterLink, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import validate from 'validate.js'
 import { makeStyles } from '@material-ui/styles'
-import { Grid, Button, TextField, Checkbox, Link, FormHelperText, Typography, Hidden } from '@material-ui/core'
+import { Grid, Button, TextField, Checkbox, FormHelperText, Typography, Hidden } from '@material-ui/core'
 import axios from 'axios'
 import { SketchPicker } from 'react-color'
 
@@ -154,10 +154,6 @@ const AddText = props => {
         touched: {},
         errors: {}
     })
-
-    const handleChangeComplete = color => {
-        console.log(color)
-    }
 
     useEffect(() => {
         const errors = validate(formState.values, schema)
