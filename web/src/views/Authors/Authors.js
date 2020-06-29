@@ -7,7 +7,6 @@ import { Link as RouterLink, withRouter } from 'react-router-dom'
 import DoneIcon from '@material-ui/icons/Done'
 import CloseIcon from '@material-ui/icons/Close'
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount'
-import PermIdentityIcon from '@material-ui/icons/PermIdentity'
 import PersonIcon from '@material-ui/icons/Person'
 import MuiAlert from '@material-ui/lab/Alert'
 
