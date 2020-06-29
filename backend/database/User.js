@@ -7,6 +7,7 @@ const dotenv = require('dotenv')
 log = async (data) => {
     try {
         var conneciton = await pool.getPool()
+        data.country === 'unknown' ? (country = 'TR') : (country = data.country)
         const saveQuery = {
             text:
                 'INSERT INTO loginlog( ipaddress,  os, platform, browser, device_type, country, city, userid) VALUES ( $1,$2,$3,$4,$5,$6,$7,$8)',
@@ -16,7 +17,7 @@ log = async (data) => {
                 data.platform,
                 data.browser,
                 data.device_type,
-                data.country,
+                country,
                 data.city,
                 data.userID
             ]
