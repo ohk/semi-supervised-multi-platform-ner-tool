@@ -6,17 +6,17 @@ get = async () => {
         data = {}
         try {
             queryUserCount = {
-                text: 'SELECT * FROM users WHERE validation = true'
+                text: 'SELECT * FROM users'
             }
             userCountResult = await conneciton.query(queryUserCount)
-            data.userCount = userCountResult.rows.length
+            data.totalUser = userCountResult.rows.length
         } catch (error) {
             console.log('USER COUNT \n', error)
         }
 
         try {
             userTop10Query = {
-                text: 'SELECT * FROM users ORDER BY textcount DESC LIMIT 10'
+                text: 'SELECT * FROM users WHERE userid != 1 ORDER BY textcount DESC LIMIT 6'
             }
             userTop10Result = await conneciton.query(userTop10Query)
             userTop10 = []
@@ -34,7 +34,7 @@ get = async () => {
                 tmpUserTop10.textCount = textCount
                 userTop10.push(tmpUserTop10)
             }
-            data.userTop10 = userTop10
+            data.top6User = userTop10
         } catch (error) {
             console.log('Top 10 \n', error)
         }
@@ -70,21 +70,17 @@ get = async () => {
             textCountResult = await conneciton.query({
                 text: 'SELECT * FROM text'
             })
-            data.textCount = textCountResult.rows.length
+            data.totalText = textCountResult.rows.length
         } catch (error) {
             console.log('TEXT count \n', error)
         }
 
         try {
             queryTextTagCount = {
-                text: 'SELECT * FROM text WHERE tagcount>1'
+                text: 'SELECT SUM (tagcount) AS total FROM text'
             }
             textTagCountResult = await conneciton.query(queryTextTagCount)
-            if (textTagCountResult.rows.length != 0) {
-                data.process = Math.ceil((textTagCountResult.rows.length / data.textCount) * 100)
-            } else {
-                data.process = 0
-            }
+            data.totalTag = textTagCountResult.rows[0].total
         } catch (error) {
             console.log('text tag count \n', error)
         }
@@ -99,6 +95,10 @@ get = async () => {
             tabletR = await conneciton.query({
                 text: 'SELECT * FROM loginlog WHERE device_type = 2'
             })
+            devices = {}
+            devices.mobileC = mobileR.rows.length
+            devices.tabletC = tabletR.rows.length
+            devices.desktopC = desktopR.rows.length
             totalDevice = desktopR.rows.length + mobileR.rows.length + tabletR.rows.length
             if (totalDevice > 0) {
                 desktop = Math.ceil((desktopR.rows.length / totalDevice) * 100)
@@ -109,23 +109,69 @@ get = async () => {
                 mobile = 0
                 tablet = 0
             }
-            data.device = {
-                desktop,
-                mobile,
-                tablet
-            }
+            devices.mobileV = mobile
+            devices.tabletV = tablet
+            devices.desktopV = desktop
+            data.devices = devices
         } catch (error) {
             console.log('DEvice \n', error)
         }
 
         try {
             authors = await conneciton.query({
-                text: 'SELECT authorname,category,textcount FROM author'
+                text: 'SELECT authorname,category,textcount,authorid FROM author ORDER BY textcount DESC LIMIT 6'
             })
-            data.authors = authors.rows
+            data.top6Author = authors.rows
         } catch (error) {
             console.log('Authors \n', error)
         }
+
+        try {
+            authors = await conneciton.query({
+                text: 'SELECT COUNT(*) FROM author'
+            })
+            data.totalAuthor = authors.rows[0].count
+        } catch (error) {
+            console.log('Authors \n', error)
+        }
+        try {
+            request = await conneciton.query({
+                text: 'SELECT SUM (requestcount) AS total FROM users WHERE userid != 1'
+            })
+            data.totalRequest = request.rows[0].total
+        } catch (error) {
+            console.log('Authors \n', error)
+        }
+
+        try {
+            train = await conneciton.query({
+                text: 'SELECT COUNT(*) FROM nertrainrecord'
+            })
+            data.totalTrain = train.rows[0].count - 1
+        } catch (error) {
+            console.log('Authors \n', error)
+        }
+
+        try {
+            login = await conneciton.query({
+                text:
+                    'SELECT logid,ipaddress,l.createdat,country,name,surname,username FROM loginlog l, users u WHERE l.userid = u.userid ORDER BY l.createdat DESC LIMIT 10'
+            })
+            data.last10login = login.rows
+        } catch (error) {
+            console.log('Authors \n', error)
+        }
+
+        try {
+            last10User = await conneciton.query({
+                text:
+                    'SELECT userid,name,surname,username,email,createdat,validation FROM users  ORDER BY createdat DESC LIMIT 10'
+            })
+            data.last10User = last10User.rows
+        } catch (error) {
+            console.log('Authors \n', error)
+        }
+
         return { status: true, data }
     } catch (error) {
         return { status: false, message: error }
