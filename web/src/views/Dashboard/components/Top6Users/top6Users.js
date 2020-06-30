@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
-import { Link as RouterLink, withRouter } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import {
     Card,
     CardHeader,
@@ -12,9 +12,7 @@ import {
     Divider,
     List,
     ListItem,
-    ListItemAvatar,
     ListItemText,
-    IconButton,
     Link
 } from '@material-ui/core'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'

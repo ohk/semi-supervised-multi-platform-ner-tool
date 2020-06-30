@@ -1,31 +1,23 @@
-import React, { useState } from 'react'
+import React from 'react'
 import clsx from 'clsx'
 import moment from 'moment'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import ReactCountryFlag from 'react-country-flag'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
-import LanguageIcon from '@material-ui/icons/Language'
 
 import { countries } from 'country-data'
 import {
     Card,
-    CardActions,
     CardHeader,
     CardContent,
-    Button,
     Divider,
     Table,
     TableBody,
     TableCell,
     TableHead,
-    TableRow,
-    Tooltip,
-    TableSortLabel
+    TableRow
 } from '@material-ui/core'
-import ArrowRightIcon from '@material-ui/icons/ArrowRight'
-
-import { StatusBullet } from 'components'
 
 const useStyles = makeStyles(theme => ({
     root: {},
@@ -46,12 +38,6 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'flex-end'
     }
 }))
-
-const statusColors = {
-    delivered: 'success',
-    pending: 'info',
-    refunded: 'danger'
-}
 
 const Logins = props => {
     const { className, logins, ...rest } = props
