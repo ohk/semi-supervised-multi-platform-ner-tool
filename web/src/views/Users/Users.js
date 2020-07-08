@@ -201,6 +201,7 @@ const Users = props => {
                 }
             })
             .catch(error => {
+                console.log(error)
                 setMes(error.response.data.message)
                 setSevere('error')
                 setOpen(true)

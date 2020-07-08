@@ -68,6 +68,11 @@ const Sidebar = props => {
                 icon: <AutorenewIcon />
             },
             {
+                title: 'Train Excludeds',
+                href: '/trainExcludeds',
+                icon: <AutorenewIcon />
+            },
+            {
                 title: 'Add Text',
                 href: '/addText',
                 icon: <CreateIcon />

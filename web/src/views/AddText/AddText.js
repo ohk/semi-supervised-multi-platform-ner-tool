@@ -5,7 +5,7 @@ import validate from 'validate.js'
 import { makeStyles } from '@material-ui/styles'
 import { Grid, Button, TextField, Typography } from '@material-ui/core'
 import axios from 'axios'
-
+import ReactFileReader from 'react-file-reader'
 import MuiAlert from '@material-ui/lab/Alert'
 
 function Alert(props) {
@@ -170,6 +170,20 @@ const AddText = props => {
         }))
     }
 
+    let fileReader
+
+    const handleFileRead = e => {
+        const content = fileReader.result
+        console.log(content)
+        // … do something with the 'content' …
+    }
+
+    const handleFileChosen = file => {
+        fileReader = new FileReader()
+        fileReader.onloadend = handleFileRead
+        fileReader.readAsText(file)
+    }
+
     const handleSignUp = event => {
         event.preventDefault()
         axios
@@ -270,6 +284,16 @@ const AddText = props => {
                                     >
                                         Add Text
                                     </Button>
+
+                                    <div className="upload-expense">
+                                        <input
+                                            type="file"
+                                            id="file"
+                                            className="input-file"
+                                            accept=".txt"
+                                            onChange={e => handleFileChosen(e.target.files[0])}
+                                        />
+                                    </div>
                                 </form>
                             </div>
                         </div>

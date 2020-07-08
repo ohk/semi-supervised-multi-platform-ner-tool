@@ -7,9 +7,10 @@ var schedule = require('node-schedule')
 var path = require('path')
 const DB = require('./database/index')
 const { server } = require('./ner/index')
-
+const morgan = require('morgan')
 var useragent = require('express-useragent')
 const expressip = require('express-ip')
+const helmet = require('helmet')
 
 main = async () => {
     try {
@@ -36,6 +37,7 @@ main = async () => {
                     })
                     textid = text.id
                     server.post(data[0].content, async (err, res) => {
+                        console.log(err, res)
                         var tags = []
                         for (let i = 0; i < res.tags.length; i++) {
                             if (typeof res.tags[i].tag == 'string') {
@@ -59,7 +61,9 @@ main = async () => {
                         }
                         result = await DB.Tag.addRecord(records)
                     })
-                } catch (error) {}
+                } catch (error) {
+                    console.log(error)
+                }
             }
         }
     } catch (error) {

@@ -61,7 +61,6 @@ list = async (data) => {
             text: 'SELECT COUNT(*) FROM text'
         }
         count = await conneciton.query(queryC)
-        console.log(count)
         return { status: true, data: text.rows, count: count.rows[0].count }
     } catch (error) {
         return { status: false, data: [], error: error }

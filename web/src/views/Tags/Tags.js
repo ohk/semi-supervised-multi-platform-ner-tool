@@ -45,7 +45,18 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         marginTop: theme.spacing(2),
-        padding: 10
+        padding: 10,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    contentBody: {
+        flexGrow: 1,
+        display: 'flex',
+        alignItems: 'center',
+        [theme.breakpoints.down('md')]: {
+            justifyContent: 'center'
+        }
     },
     nameC: {
         'text-transform': 'capitalize'
@@ -70,7 +81,15 @@ const useStyles = makeStyles(theme => ({
     },
     table: {
         'margin-bottom': '1.5rem',
-        border: '1px solid #EEEEEE'
+        border: '1px solid #EEEEEE',
+        paddingLeft: 100,
+        paddingRight: 100,
+        paddingBottom: 125,
+        flexBasis: 700,
+        [theme.breakpoints.down('sm')]: {
+            paddingLeft: theme.spacing(2),
+            paddingRight: theme.spacing(2)
+        }
     }
 }))
 
@@ -137,7 +156,7 @@ const Tags = props => {
                     <Hidden only={['xs', 'sm']}>
                         <PerfectScrollbar>
                             <div className={classes.content}>
-                                <div className={classes.inner}>
+                                <div className={classes.contentBody}>
                                     {
                                         <Table className={classes.table}>
                                             <TableHead>
@@ -193,18 +212,18 @@ const Tags = props => {
                                             </TableBody>
                                         </Table>
                                     }
-                                    <CardActions className={classes.actions}>
-                                        <TablePagination
-                                            component="div"
-                                            count={dCount}
-                                            onChangePage={handlePageChange}
-                                            onChangeRowsPerPage={handleRowsPerPageChange}
-                                            page={page}
-                                            rowsPerPage={rowsPerPage}
-                                            rowsPerPageOptions={[15, 25, 50]}
-                                        />
-                                    </CardActions>
                                 </div>
+                                <CardActions className={classes.actions}>
+                                    <TablePagination
+                                        component="div"
+                                        count={dCount}
+                                        onChangePage={handlePageChange}
+                                        onChangeRowsPerPage={handleRowsPerPageChange}
+                                        page={page}
+                                        rowsPerPage={rowsPerPage}
+                                        rowsPerPageOptions={[15, 25, 50]}
+                                    />
+                                </CardActions>
                             </div>
                         </PerfectScrollbar>
                     </Hidden>
@@ -215,85 +234,96 @@ const Tags = props => {
                                 {data.map(type => (
                                     <div>
                                         <span className={classes.spacer} />
-                                        {type.tagname !== 'O' ? (
-                                            <Table className={classes.table} key={type.tagtypeid} id={type.tagtypeid}>
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <TableCell className={classes.tablecell}>Key</TableCell>
-                                                        <TableCell className={classes.tablecell}>Value</TableCell>
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    <TableRow className={classes.tableRow} hover>
-                                                        <TableCell
-                                                            className={classes.tablecell}
-                                                            style={{ color: type.color }}
-                                                        >
-                                                            Tag Name
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={classes.tablecell}
-                                                            style={{ color: type.color }}
-                                                        >
-                                                            {type.tagname}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                    <TableRow className={classes.tableRow} hover>
-                                                        <TableCell
-                                                            className={classes.tablecell}
-                                                            style={{ background: type.color, color: 'white' }}
-                                                        >
-                                                            Color
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={classes.tablecell}
-                                                            style={{ background: type.color, color: 'white' }}
-                                                        >
-                                                            {type.color}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                </TableBody>
-                                            </Table>
-                                        ) : (
-                                            <Table className={classes.table} key={type.tagtypeid} id={type.tagtypeid}>
-                                                <TableHead>
-                                                    <TableRow>
-                                                        <TableCell className={classes.tablecell}>Key</TableCell>
-                                                        <TableCell className={classes.tablecell}>Value</TableCell>
-                                                    </TableRow>
-                                                </TableHead>
-                                                <TableBody>
-                                                    <TableRow className={classes.tableRow} hover>
-                                                        <TableCell
-                                                            className={classes.tablecell}
-                                                            style={{ color: 'black' }}
-                                                        >
-                                                            Tag Name
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={classes.tablecell}
-                                                            style={{ color: 'black' }}
-                                                        >
-                                                            {type.tagname}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                    <TableRow className={classes.tableRow} hover>
-                                                        <TableCell
-                                                            className={classes.tablecell}
-                                                            style={{ background: type.color, color: 'black' }}
-                                                        >
-                                                            Color
-                                                        </TableCell>
-                                                        <TableCell
-                                                            className={classes.tablecell}
-                                                            style={{ background: type.color, color: 'black' }}
-                                                        >
-                                                            {type.color}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                </TableBody>
-                                            </Table>
-                                        )}
+                                        <PerfectScrollbar>
+                                            {type.tagname !== 'O' ? (
+                                                <Table
+                                                    className={classes.table}
+                                                    key={type.tagtypeid}
+                                                    id={type.tagtypeid}
+                                                >
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            <TableCell className={classes.tablecell}>Key</TableCell>
+                                                            <TableCell className={classes.tablecell}>Value</TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+
+                                                    <TableBody>
+                                                        <TableRow className={classes.tableRow} hover>
+                                                            <TableCell
+                                                                className={classes.tablecell}
+                                                                style={{ color: type.color }}
+                                                            >
+                                                                Tag Name
+                                                            </TableCell>
+                                                            <TableCell
+                                                                className={classes.tablecell}
+                                                                style={{ color: type.color }}
+                                                            >
+                                                                {type.tagname}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                        <TableRow className={classes.tableRow} hover>
+                                                            <TableCell
+                                                                className={classes.tablecell}
+                                                                style={{ background: type.color, color: 'white' }}
+                                                            >
+                                                                Color
+                                                            </TableCell>
+                                                            <TableCell
+                                                                className={classes.tablecell}
+                                                                style={{ background: type.color, color: 'white' }}
+                                                            >
+                                                                {type.color}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    </TableBody>
+                                                </Table>
+                                            ) : (
+                                                <Table
+                                                    className={classes.table}
+                                                    key={type.tagtypeid}
+                                                    id={type.tagtypeid}
+                                                >
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            <TableCell className={classes.tablecell}>Key</TableCell>
+                                                            <TableCell className={classes.tablecell}>Value</TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        <TableRow className={classes.tableRow} hover>
+                                                            <TableCell
+                                                                className={classes.tablecell}
+                                                                style={{ color: 'black' }}
+                                                            >
+                                                                Tag Name
+                                                            </TableCell>
+                                                            <TableCell
+                                                                className={classes.tablecell}
+                                                                style={{ color: 'black' }}
+                                                            >
+                                                                {type.tagname}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                        <TableRow className={classes.tableRow} hover>
+                                                            <TableCell
+                                                                className={classes.tablecell}
+                                                                style={{ background: type.color, color: 'black' }}
+                                                            >
+                                                                Color
+                                                            </TableCell>
+                                                            <TableCell
+                                                                className={classes.tablecell}
+                                                                style={{ background: type.color, color: 'black' }}
+                                                            >
+                                                                {type.color}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    </TableBody>
+                                                </Table>
+                                            )}
+                                        </PerfectScrollbar>
                                     </div>
                                 ))}
                             </Card>

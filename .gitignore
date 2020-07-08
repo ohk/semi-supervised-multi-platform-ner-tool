@@ -108,3 +108,6 @@ dist
 
 #texts
 texts/
+
+trainfiles/
+classifiers/

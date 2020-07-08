@@ -41,12 +41,12 @@ add = async (data) => {
         chk = await conneciton.query(check)
         if (chk.rows.length === 0) {
             const query = {
-                text: 'INSERT INTO author(authorname,mainurl,category) VALUES($1,$2,$3)',
+                text: 'INSERT INTO author(authorname,mainurl,category) VALUES($1,$2,$3) RETURNING authorid',
                 values: [data.authorname, data.mainurl, data.category]
             }
             added = await conneciton.query(query)
             if (added.rowCount != 0) {
-                return { status: true, message: 'Author successfully added' }
+                return { status: true, message: 'Author successfully added', id: added.rows[0].authorid }
             } else {
                 return { status: false, message: 'Query error, please try again' }
             }

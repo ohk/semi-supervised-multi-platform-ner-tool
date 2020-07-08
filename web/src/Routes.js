@@ -20,6 +20,8 @@ import {
     AddTag as AddTagView,
     AddAuthor as AddAuthorView,
     Tags as TagsView,
+    Train as TrainView,
+    TrainEX as TrainEXView,
     Unauthorized as UnauthorizedView,
     NotFound as NotFoundView
 } from './views'
@@ -37,6 +39,8 @@ const Routes = () => {
             <RouteWithLayout component={AddTagView} exact layout={MainLayout} path="/addTag" />
             <RouteWithLayout component={AddAuthorView} exact layout={MainLayout} path="/addAuthor" />
             <RouteWithLayout component={TagsView} exact layout={MainLayout} path="/tags" />
+            <RouteWithLayout component={TrainView} exact layout={MainLayout} path="/trains" />
+            <RouteWithLayout component={TrainEXView} exact layout={MainLayout} path="/trainExcludeds" />
             <RouteWithLayout component={SignUpView} exact layout={MinimalLayout} path="/sign-up" />
             <RouteWithLayout component={SignInView} exact layout={MinimalLayout} path="/" />
             <RouteWithLayout component={ValidateView} exact layout={MinimalLayout} path="/validate/*" />

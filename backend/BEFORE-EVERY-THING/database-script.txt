@@ -91,7 +91,6 @@ CREATE TABLE IF NOT EXISTS forgotPassword (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS NERTrainRecord (
   recordID SERIAL NOT NULL,
-  version VARCHAR,
   createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   path VARCHAR,
   PRIMARY KEY (recordID));
@@ -223,33 +222,6 @@ CREATE TABLE IF NOT EXISTS trainExcluded (
     ON UPDATE CASCADE);
 
 
--- -----------------------------------------------------
--- Table `mydb`.`NERTrainWordRecord`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS NERTrainWordRecord (
-  wordID uuid NOT NULL,
-  trainRecordID INT NOT NULL,
-  tagTypeID INT NOT NULL,
-  PRIMARY KEY (wordID, trainRecordID, tagTypeID),
-  CONSTRAINT word
-    FOREIGN KEY (wordID)
-    REFERENCES word (wordID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT NER
-    FOREIGN KEY (trainRecordID)
-    REFERENCES NERTrainRecord (recordID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT tag
-    FOREIGN KEY (tagTypeID)
-    REFERENCES tagType (tagTypeID)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE);
-
-
-
-
 
 --SET SQL_MODE=@OLD_SQL_MODE;
 --SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -303,26 +275,12 @@ CREATE TRIGGER update_textCount AFTER INSERT ON text
 INSERT INTO users(name, surname, username, password, email, validation,role) VALUES ( 'root', 'root', 'root', 'root', 'root', true,0);
 
 INSERT INTO author(authorname,mainurl,category,crawl) VALUES('root','root','root',false);
-INSERT INTO author(authorname,mainurl,category) VALUES('Abdurrahman Yıldırım','https://www.haberturk.com/htyazar/abdurrahman-yildirim-1018/','Ekonomi');
-INSERT INTO author(authorname,mainurl,category) VALUES('Esfender Korkmaz','https://www.yenicaggazetesi.com.tr/esfender-korkmaz-18022y.htm','Ekonomi');
-INSERT INTO author(authorname,mainurl,category) VALUES('Gila Benmayor','http://www.hurriyet.com.tr/yazarlar/gila-benmayor/','Ekonomi');
-INSERT INTO author(authorname,mainurl,category) VALUES('Güntay Şimşek','https://www.haberturk.com/htyazar/guntay-simsek-1019/','Ekonomi');
-INSERT INTO author(authorname,mainurl,category) VALUES('Sabri Durmaz','https://www.evrensel.net/yazar/65/i-sabri-durmaz/','Ekonomi');
-INSERT INTO author(authorname,mainurl,category) VALUES('Yılmaz Özdil','https://www.sozcu.com.tr/kategori/yazarlar/yilmaz-ozdil','Politika');
-INSERT INTO author(authorname,mainurl,category) VALUES('Süleyman Özışık','https://www.turkiyegazetesi.com.tr/yazarlar/suleyman-ozisik','Politika');
-INSERT INTO author(authorname,mainurl,category) VALUES('Soner Yalçın','https://www.sozcu.com.tr/kategori/soner-yalcin/','Politika');
-INSERT INTO author(authorname,mainurl,category) VALUES('Salih Tuna','https://www.sabah.com.tr/yazarlar/salih-tuna/arsiv?getall=true','Politika');
-INSERT INTO author(authorname,mainurl,category) VALUES('Nedim Şener','https://www.posta.com.tr/yazarlar/nedim-sener','Politika');
-INSERT INTO author(authorname,mainurl,category) VALUES('Fatih Altaylı','https://www.haberturk.com/htyazar/fatih-altayli-1001/','Politika');
-INSERT INTO author(authorname,mainurl,category) VALUES('Batuhan Yaşar','https://www.turkiyegazetesi.com.tr/yazarlar/batuhan-yasar','Politika');
-INSERT INTO author(authorname,mainurl,category) VALUES('Abdulkadir Selvi','http://www.hurriyet.com.tr/yazarlar/abdulkadir-selvi/','Politika');
-INSERT INTO author(authorname,mainurl,category) VALUES('Atilla Gökçe','http://www.milliyet.com.tr/yazarlar/attila-gokce/','Spor');
-INSERT INTO author(authorname,mainurl,category) VALUES('Hakkı Gökçe','https://www.takvim.com.tr/yazarlar/hakki_yalcin/arsiv?tc=4214&page=2','Spor');
-INSERT INTO author(authorname,mainurl,category) VALUES('Mehmet Demirkol','https://www.fanatik.com.tr/yazarlar/mehmet-demirkol','Spor');
 
 
-INSERT INTO nertrainrecord(version) VALUES ('1');
-INSERT INTO trainexcluded(trainrecordid, key, value) VALUES (1, 'begin', '946684800');
+
+INSERT INTO nertrainrecord(path) VALUES ('./classifiers/model1.ser.gz');
+INSERT INTO nertrainrecord(path) VALUES ('');
+INSERT INTO trainexcluded(trainrecordid, key, value) VALUES (1, 'begin', '1970-01-01 11:17:15.409152+03');
 
 
 INSERT INTO tagtype(tagname, color) VALUES ( 'MONEY', '#008000');
@@ -333,3 +291,4 @@ INSERT INTO tagtype(tagname, color) VALUES ( 'PERCENT', '#9a1f40');
 INSERT INTO tagtype(tagname, color) VALUES ( 'DATE', '#30475e');
 INSERT INTO tagtype(tagname, color) VALUES ( 'TIME', '#512b58');
 INSERT INTO tagtype(tagname, color) VALUES ( 'O', '#FFFFFF');
+\

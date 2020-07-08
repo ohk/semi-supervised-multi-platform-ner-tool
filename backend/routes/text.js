@@ -29,7 +29,6 @@ router.post('/add', verify, async (req, res) => {
             for (let i = 0; i < resS.tags.length; i++) {
                 if (typeof resS.tags[i].tag == 'string') {
                     word = resS.tags[i].word
-                    console.log(word)
                     tag = await DB.Tag.getTagTypeID({
                         tagname: resS.tags[i].tag
                     })
@@ -52,7 +51,6 @@ router.post('/add', verify, async (req, res) => {
             return res.status(200).send({ status: true, textid: textid })
         })
     } catch (error) {
-        console.log(error)
         res.status(400).send(error)
     }
 })

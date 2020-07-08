@@ -102,5 +102,5 @@ app.use('/api/user', userRoute)
 app.use('/api/dashboard', dashRoute)
 app.use('/api/system', systemRoute)
 app.listen(process.env.PORT, () => {
-    console.log('Server Up! Listen port ' + process.env.PORT)
+    console.log('Server Up! Listen port ' + (process.env.PORT || 3001))
 })

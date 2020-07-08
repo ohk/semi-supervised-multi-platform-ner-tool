@@ -4,6 +4,9 @@ addRecord = async (data) => {
     try {
         var conneciton = pool.getPool()
         var status = true
+        if (typeof data.tags === 'string') {
+            data.tags = JSON.parse(data.tags)
+        }
         for (let i = 0; i < data.tags.length; i++) {
             try {
                 const query = {
@@ -21,7 +24,6 @@ addRecord = async (data) => {
                 text: 'UPDATE users SET textcount=textcount+1 WHERE userid = $1',
                 values: [data.userID]
             })
-
             await conneciton.query({
                 text: 'UPDATE text SET tagcount=tagcount+1 WHERE textid= $1',
                 values: [data.textid]

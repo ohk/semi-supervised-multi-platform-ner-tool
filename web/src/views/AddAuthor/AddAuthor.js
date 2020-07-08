@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import validate from 'validate.js'
 import { makeStyles } from '@material-ui/styles'
-import { Grid, Button, TextField, Typography } from '@material-ui/core'
+import { Grid, Button, Checkbox, TextField, Typography } from '@material-ui/core'
 import axios from 'axios'
 
 import MuiAlert from '@material-ui/lab/Alert'
@@ -181,7 +181,9 @@ const AddText = props => {
                 {
                     mainurl: formState.values.mainurl,
                     authorname: formState.values.authorname,
-                    category: formState.values.category
+                    category: formState.values.category,
+                    crawl: formState.values.correction,
+                    count: formState.values.count
                 },
                 {
                     headers: {
@@ -268,11 +270,40 @@ const AddText = props => {
                                         error={hasError('category')}
                                         fullWidth
                                         helperText={hasError('authorname') ? formState.errors.category[0] : null}
-                                        label="Category"
+                                        label="Label"
                                         name="category"
                                         onChange={handleChange}
                                         type="text"
                                         value={formState.values.category || ''}
+                                        variant="outlined"
+                                    />
+                                    <div className={classes.correction}>
+                                        <Checkbox
+                                            checked={formState.values.correction || false}
+                                            className={classes.correctionCheckbox}
+                                            color="primary"
+                                            name="correction"
+                                            onChange={handleChange}
+                                        />
+                                        <Typography
+                                            className={classes.correctionText}
+                                            color="textSecondary"
+                                            variant="body1"
+                                        >
+                                            Would you like us to crawl past posts? If you have activated this feature,
+                                            please remember to specify numbers.
+                                        </Typography>
+                                    </div>
+                                    <TextField
+                                        className={classes.textField}
+                                        error={hasError('count')}
+                                        fullWidth
+                                        helperText={hasError('authorname') ? formState.errors.count[0] : null}
+                                        label="Count"
+                                        name="count"
+                                        onChange={handleChange}
+                                        type="text"
+                                        value={formState.values.count || ''}
                                         variant="outlined"
                                     />
                                     <Button

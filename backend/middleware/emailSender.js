@@ -3,16 +3,18 @@ const dotenv = require('dotenv')
 dotenv.config({ path: '../' })
 
 let transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.zoho.com',
+    port: 465,
+    secure: true,
     auth: {
-        user: process.env.EMAILUSERNAME || 'ytucener@gmail.com',
-        pass: process.env.EMAILPASSWORD || 'wurjym-7qAbki-pidsin'
+        user: 'ytucenertool@zohomail.com',
+        pass: 'a5fetCkBATy6XpG'
     }
 })
 
 verificationMail = async (emailAddress, verificationKey) => {
     let info = await transporter.sendMail({
-        from: `"YTUCE NER TOOL" <${process.env.EMAILUSERNAME}>`,
+        from: `"YTUCE NER TOOL" <ytucenertool@zohomail.com>`,
         to: emailAddress,
         subject: 'Verification Email',
         text: verificationKey,
@@ -214,7 +216,7 @@ verificationMail = async (emailAddress, verificationKey) => {
 
 forgotPasswordMail = async (emailAddress, verificationKey) => {
     let info = await transporter.sendMail({
-        from: `"YTUCE NER TOOL" <${process.env.EMAILUSERNAME}>`,
+        from: `"YTUCE NER TOOL" <ytucenertool@zohomail.com>`,
         to: emailAddress,
         subject: 'Reset your password',
         text: verificationKey
