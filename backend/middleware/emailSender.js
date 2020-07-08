@@ -7,8 +7,8 @@ let transporter = nodemailer.createTransport({
     port: 465,
     secure: true,
     auth: {
-        user: 'ytucenertool@zohomail.com',
-        pass: 'a5fetCkBATy6XpG'
+        user: '',
+        pass: ''
     }
 })
 
