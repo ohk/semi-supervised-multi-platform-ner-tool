@@ -143,18 +143,21 @@ const Tags = props => {
     return (
         <div className={classes.content}>
             <Card className={classes.root}>
-                <div className={classes.row}>
-                    <span className={classes.spacer} />
-                    <Link component={RouterLink} to={'/addTag'} variant="h6">
-                        <Button color="primary" variant="contained">
-                            Add Tag Type
-                        </Button>
-                    </Link>
-                </div>
                 <CardContent className={classes.content}>
                     <span className={classes.spacer} />
+
                     <Hidden only={['xs', 'sm']}>
                         <PerfectScrollbar>
+                            <div className={classes.contentBody}>
+                                <div className={classes.row}>
+                                    <span className={classes.spacer} />
+                                    <Link component={RouterLink} to={'/addTag'} variant="h6">
+                                        <Button color="primary" variant="contained">
+                                            Add Tag Type
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </div>
                             <div className={classes.content}>
                                 <div className={classes.contentBody}>
                                     {

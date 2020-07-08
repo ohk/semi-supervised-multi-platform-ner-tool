@@ -182,8 +182,9 @@ const AddText = props => {
                     mainurl: formState.values.mainurl,
                     authorname: formState.values.authorname,
                     category: formState.values.category,
-                    crawl: formState.values.correction,
-                    count: formState.values.count
+                    crawl: false
+                    //crawl: formState.values.correction,
+                    //count: formState.values.count
                 },
                 {
                     headers: {
@@ -269,7 +270,7 @@ const AddText = props => {
                                         className={classes.textField}
                                         error={hasError('category')}
                                         fullWidth
-                                        helperText={hasError('authorname') ? formState.errors.category[0] : null}
+                                        helperText={hasError('category') ? formState.errors.category[0] : null}
                                         label="Label"
                                         name="category"
                                         onChange={handleChange}
@@ -298,7 +299,7 @@ const AddText = props => {
                                         className={classes.textField}
                                         error={hasError('count')}
                                         fullWidth
-                                        helperText={hasError('authorname') ? formState.errors.count[0] : null}
+                                        helperText={hasError('count') ? formState.errors.count[0] : null}
                                         label="Count"
                                         name="count"
                                         onChange={handleChange}

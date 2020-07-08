@@ -17,10 +17,7 @@ const Footer = props => {
 
     return (
         <div {...rest} className={clsx(classes.root, className)}>
-            <Typography variant="body1">
-                Developed by <a href="https://ohkamisli.dev">Ömer Hamid Kamışlı</a>
-            </Typography>
-            <Typography variant="caption">Created with love.</Typography>
+            <Typography variant="body1">YTU-CE UNDER DEVELOPMENT</Typography>
         </div>
     )
 }

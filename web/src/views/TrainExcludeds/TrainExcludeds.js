@@ -300,11 +300,6 @@ const Authors = props => {
                         <span className={classes.spacer} />
                         <div className={classes.row}>
                             <span className={classes.spacer} />
-                            <Link component={RouterLink} to={'/addAuthor'} variant="h6">
-                                <Button color="primary" variant="contained">
-                                    Add Author
-                                </Button>
-                            </Link>
                         </div>
                         <PerfectScrollbar>
                             <div className={classes.content}>
