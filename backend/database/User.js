@@ -2,8 +2,7 @@ const pool = require('./pool')
 const Email = require('../middleware/emailSender')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
-const dotenv = require('dotenv')
-
+const { TOKEN_SECRET } = require('../config')
 log = async (data) => {
     try {
         var conneciton = await pool.getPool()
@@ -92,7 +91,7 @@ register = async (data) => {
         }
         idQ = await conneciton.query(idQuery)
         userID = idQ.rows[0].userid
-        validationKey = jwt.sign({ id: userID }, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
+        validationKey = jwt.sign({ id: userID }, TOKEN_SECRET)
 
         await Email.verificationMail(data.email, validationKey)
 
@@ -119,7 +118,7 @@ login = async (data) => {
         } else {
             if (check.rows[0].validation === false) {
                 userID = check.rows[0].userid
-                validationKey = jwt.sign({ id: userID }, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
+                validationKey = jwt.sign({ id: userID }, TOKEN_SECRET)
                 await Email.verificationMail(check.rows[0].email, validationKey)
                 return { status: false, message: 'Please confirm your account' }
             }
@@ -127,7 +126,7 @@ login = async (data) => {
             check.rows[0].role === 0 ? (isAdmin = true) : (isAdmin = false)
             data['userID'] = userID
             await log(data)
-            token = jwt.sign({ id: userID }, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
+            token = jwt.sign({ id: userID }, TOKEN_SECRET)
             return {
                 status: true,
                 isAdmin: isAdmin,
@@ -159,14 +158,11 @@ forgot = async (data) => {
             }
             isExist = await conneciton.query(isExistQuery)
             if (isExist.rows.length == 0) {
-                hashedKey = jwt.sign({ id: userID }, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
+                hashedKey = jwt.sign({ id: userID }, TOKEN_SECRET)
                 const createHashQuery = {
                     text: 'INSERT INTO forgotpassword(hashedkey, userid) VALUES($1,$2)',
                     values: [hashedKey, userID]
                 }
-                /**
-                 * TODO: KEY GERİ DÖNDÜRME
-                 */
                 createHash = await conneciton.query(createHashQuery)
                 await Email.forgotPasswordMail(check.rows[0].email, hashedKey)
                 return { status: true, key: hashedKey, message: 'Data confirmed' }
@@ -194,7 +190,7 @@ reset = async (data) => {
 
         check = await conneciton.query(query)
         if (check.rows.length != 0) {
-            const verified = jwt.verify(data.key, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
+            const verified = jwt.verify(data.key, TOKEN_SECRET)
             const updateQuery = {
                 text: 'UPDATE users SET password = $1 WHERE userid = $2',
                 values: [hashedPassword, verified.id]
@@ -221,7 +217,7 @@ reset = async (data) => {
 validate = async (data) => {
     try {
         var conneciton = await pool.getPool()
-        const verified = jwt.verify(data.key, process.env.TOKEN_SECRET || 'jhfasjkbhfjkashfjkajhj')
+        const verified = jwt.verify(data.key, TOKEN_SECRET)
         const updateQuery = {
             text: 'UPDATE users SET validation=true WHERE userid= $1',
             values: [verified.id]

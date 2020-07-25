@@ -1,20 +1,19 @@
 const nodemailer = require('nodemailer')
-const dotenv = require('dotenv')
-dotenv.config({ path: '../' })
+const { EMAIL_HOST, EMAIL_PORT, EMAIL_SECURE, EMAIL_USERNAME, EMAIL_PASSWORD, EMAIL_NAME } = require('../config')
 
 let transporter = nodemailer.createTransport({
-    host: 'smtp.zoho.com',
-    port: 465,
-    secure: true,
+    host: EMAIL_HOST,
+    port: EMAIL_PORT,
+    secure: EMAIL_SECURE,
     auth: {
-        user: '',
-        pass: ''
+        user: EMAIL_USERNAME,
+        pass: EMAIL_PASSWORD
     }
 })
 
 verificationMail = async (emailAddress, verificationKey) => {
     let info = await transporter.sendMail({
-        from: `"YTUCE NER TOOL" <ytucenertool@zohomail.com>`,
+        from: `"${EMAIL_NAME}" <${EMAIL_USERNAME}>`,
         to: emailAddress,
         subject: 'Verification Email',
         text: verificationKey,
@@ -216,14 +215,24 @@ verificationMail = async (emailAddress, verificationKey) => {
 
 forgotPasswordMail = async (emailAddress, verificationKey) => {
     let info = await transporter.sendMail({
-        from: `"YTUCE NER TOOL" <ytucenertool@zohomail.com>`,
+        from: `"${EMAIL_NAME}" <${EMAIL_USERNAME}>`,
         to: emailAddress,
         subject: 'Reset your password',
         text: verificationKey
     })
 }
 
+notificationCount = async (emailAddress) => {
+    let info = await transporter.sendMail({
+        from: `"${EMAIL_NAME}" <${EMAIL_USERNAME}>`,
+        to: emailAddress,
+        subject: 'Train System',
+        text: 'Sistemi Eğitsene'
+    })
+}
+
 module.exports = {
     verificationMail,
-    forgotPasswordMail
+    forgotPasswordMail,
+    notificationCount
 }

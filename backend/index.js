@@ -1,5 +1,4 @@
 const express = require('express')
-const dotenv = require('dotenv')
 const bodyParser = require('body-parser')
 var cors = require('cors')
 const crawler = require('turkish-columnist-crawler')
@@ -11,6 +10,7 @@ const morgan = require('morgan')
 var useragent = require('express-useragent')
 const expressip = require('express-ip')
 const helmet = require('helmet')
+const { PORT } = require('./config')
 /**
  * ITS crawl everyday
  */
@@ -69,8 +69,6 @@ schedule.scheduleJob('0 10 * * *', async () => {
     }
 })
 
-dotenv.config()
-
 const app = express()
 app.use(bodyParser.urlencoded({ limit: '200mb', extended: true, parameterLimit: 1000000 }))
 app.use(cors())
@@ -101,6 +99,6 @@ app.use('/api/text', textRoute)
 app.use('/api/user', userRoute)
 app.use('/api/dashboard', dashRoute)
 app.use('/api/system', systemRoute)
-app.listen(process.env.PORT, () => {
-    console.log('Server Up! Listen port ' + (process.env.PORT || 3001))
+app.listen(PORT, () => {
+    console.log('Server Up! Listen port ' + PORT)
 })
