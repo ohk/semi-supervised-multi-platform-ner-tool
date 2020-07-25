@@ -172,6 +172,15 @@ get = async () => {
             console.log('Authors \n', error)
         }
 
+        try {
+            lastTrainCount = await conneciton.query({
+                text: "SELECT value FROM setting WHERE key='last_train_count'"
+            })
+            data.lastTrainCount = lastTrainCount.rows[0].value
+        } catch (error) {
+            console.log('Authors \n', error)
+        }
+
         return { status: true, data }
     } catch (error) {
         return { status: false, message: error }

@@ -1,5 +1,5 @@
 const pool = require('./pool')
-
+const Email = require('../middleware/emailSender')
 addRecord = async (data) => {
     try {
         var conneciton = pool.getPool()
@@ -28,6 +28,23 @@ addRecord = async (data) => {
                 text: 'UPDATE text SET tagcount=tagcount+1 WHERE textid= $1',
                 values: [data.textid]
             })
+            const value = await conneciton.query({
+                text: "UPDATE setting SET value = value + 1 WHERE key='last_train_count' RETURNING value"
+            })
+            const count = await conneciton.query({
+                text: "SELECT value FROM setting WHERE key='train_count'"
+            })
+            if (value.rows[0].value > count.rows[0].value) {
+                const emails = await conneciton.query({
+                    text: 'SELECT email FROM users WHERE role=0 AND userid!=1'
+                })
+                for (let i = 0; i < emails.rows.length; i++) {
+                    await Email.notificationCount(emails.rows[i].email)
+                }
+                const value2 = await conneciton.query({
+                    text: "UPDATE setting SET value = 0 WHERE key='last_train_count' RETURNING value"
+                })
+            }
         } catch (error) {
             status = false
             console.log(error)
@@ -126,10 +143,29 @@ listTagTypes = async (data) => {
         return { status: false, message: error.message }
     }
 }
+
+editTag = async (data) => {
+    try {
+        var conneciton = pool.getPool()
+        const query = {
+            text: 'UPDATE tagtype SET tagalias=$2, color=$3 WHERE tagtypeid=$1',
+            values: [data.tagtypeid, data.tagalias, data.color]
+        }
+        type = await conneciton.query(query)
+        if (type.rowCount != 0) {
+            return { status: true, data: type.rows }
+        } else {
+            return { status: false, message: 'Query error, please try again' }
+        }
+    } catch (error) {
+        return { status: false, message: error.message }
+    }
+}
 module.exports = {
     addRecord,
     getTagTypeID,
     addTagType,
     getTextTag,
-    listTagTypes
+    listTagTypes,
+    editTag
 }

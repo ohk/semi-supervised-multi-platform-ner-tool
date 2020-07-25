@@ -96,11 +96,6 @@ const Sidebar = props => {
     } else {
         pages = [
             {
-                title: 'Dashboard',
-                href: '/dashboard',
-                icon: <DashboardIcon />
-            },
-            {
                 title: 'Add Text',
                 href: '/addText',
                 icon: <CreateIcon />

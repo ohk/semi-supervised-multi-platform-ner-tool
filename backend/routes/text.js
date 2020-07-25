@@ -60,8 +60,14 @@ router.get('/list', async (req, res) => {
         data = {}
         page = parseInt(req.query.page || 0)
         rows = parseInt(req.query.rows || 15)
+        search = '%' + (req.query.search || '') + '%'
+        sortField = req.query.sortField || 'tagcount'
+        sortType = req.query.sortType || 'ASC'
+        data.sortField = sortField
+        data.sortType = sortType
         data.offset = page * rows
         data.rows = rows
+        data.search = search
         result = await DB.Text.list(data)
         res.status(200).send(result)
     } catch (error) {

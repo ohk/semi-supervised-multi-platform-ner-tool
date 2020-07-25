@@ -51,18 +51,65 @@ get = async (data) => {
 list = async (data) => {
     try {
         var conneciton = pool.getPool()
-        const query = {
-            text:
-                'SELECT textid,title,authorname,name,surname,t.tagcount,t.createdat FROM text t,author a, users u WHERE t.authorid = a.authorid AND t.userid = u.userid ORDER BY tagcount ASC,createdat DESC LIMIT $1 OFFSET $2',
-            values: [data.rows, data.offset]
+        var query
+        if (data.sortType === 'ASC') {
+            switch (data.sortField) {
+                case 'title':
+                    query = {
+                        text:
+                            'SELECT textid,title,authorname,name,surname,t.tagcount,t.createdat FROM text t,author a, users u WHERE t.authorid = a.authorid AND t.userid = u.userid AND ((t.title LIKE $3) OR (a.authorname LIKE $3) OR (u.surname LIKE $3) OR (u.name LIKE $3)) ORDER BY title ASC,createdat DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'authorname':
+                    query = {
+                        text:
+                            'SELECT textid,title,authorname,name,surname,t.tagcount,t.createdat FROM text t,author a, users u WHERE t.authorid = a.authorid AND t.userid = u.userid AND ((t.title LIKE $3) OR (a.authorname LIKE $3) OR (u.surname LIKE $3) OR (u.name LIKE $3)) ORDER BY authorname ASC,createdat DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'tagcount':
+                    query = {
+                        text:
+                            'SELECT textid,title,authorname,name,surname,t.tagcount,t.createdat FROM text t,author a, users u WHERE t.authorid = a.authorid AND t.userid = u.userid AND ((t.title LIKE $3) OR (a.authorname LIKE $3) OR (u.surname LIKE $3) OR (u.name LIKE $3)) ORDER BY tagcount ASC,createdat DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+            }
+        } else {
+            switch (data.sortField) {
+                case 'title':
+                    query = {
+                        text:
+                            'SELECT textid,title,authorname,name,surname,t.tagcount,t.createdat FROM text t,author a, users u WHERE t.authorid = a.authorid AND t.userid = u.userid AND ((t.title LIKE $3) OR (a.authorname LIKE $3) OR (u.surname LIKE $3) OR (u.name LIKE $3)) ORDER BY title DESC,createdat DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'authorname':
+                    query = {
+                        text:
+                            'SELECT textid,title,authorname,name,surname,t.tagcount,t.createdat FROM text t,author a, users u WHERE t.authorid = a.authorid AND t.userid = u.userid AND ((t.title LIKE $3) OR (a.authorname LIKE $3) OR (u.surname LIKE $3) OR (u.name LIKE $3)) ORDER BY authorname DESC,createdat DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'tagcount':
+                    query = {
+                        text:
+                            'SELECT textid,title,authorname,name,surname,t.tagcount,t.createdat FROM text t,author a, users u WHERE t.authorid = a.authorid AND t.userid = u.userid AND ((t.title LIKE $3) OR (a.authorname LIKE $3) OR (u.surname LIKE $3) OR (u.name LIKE $3)) ORDER BY tagcount DESC,createdat DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+            }
         }
         text = await conneciton.query(query)
         const queryC = {
             text: 'SELECT COUNT(*) FROM text'
         }
         count = await conneciton.query(queryC)
+
         return { status: true, data: text.rows, count: count.rows[0].count }
     } catch (error) {
+        console.log(error)
         return { status: false, data: [], error: error }
     }
 }

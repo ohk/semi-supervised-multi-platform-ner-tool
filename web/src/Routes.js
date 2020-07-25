@@ -18,6 +18,7 @@ import {
     Texts as TextsView,
     AddText as AddTextView,
     AddTag as AddTagView,
+    EditTag as EditTagView,
     AddAuthor as AddAuthorView,
     Tags as TagsView,
     Train as TrainView,
@@ -36,6 +37,7 @@ const Routes = () => {
             <RouteWithLayout component={TextsView} exact layout={MainLayout} path="/text" />
             <RouteWithLayout component={TextView} exact layout={MainLayout} path="/text/*" />
             <RouteWithLayout component={AddTextView} exact layout={MainLayout} path="/addText" />
+            <RouteWithLayout component={EditTagView} exact layout={MainLayout} path="/editTag" />
             <RouteWithLayout component={AddTagView} exact layout={MainLayout} path="/addTag" />
             <RouteWithLayout component={AddAuthorView} exact layout={MainLayout} path="/addAuthor" />
             <RouteWithLayout component={TagsView} exact layout={MainLayout} path="/tags" />

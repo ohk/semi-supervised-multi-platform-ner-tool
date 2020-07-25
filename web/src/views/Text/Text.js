@@ -19,12 +19,26 @@ import {
     Button,
     Hidden
 } from '@material-ui/core'
+import { SearchInput } from 'components'
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 
 const useStyles = makeStyles(theme => ({
     root: {
         padding: theme.spacing(4)
     },
-
+    selected: {
+        color: 'red'
+    },
+    upDownIcon: {
+        float: 'right',
+        '&:hover': {
+            background: '#e3e3e3'
+        }
+    },
+    searchInput: {
+        marginRight: theme.spacing(1)
+    },
     button: {
         float: 'right',
         display: 'block',
@@ -74,7 +88,10 @@ const Text = props => {
     const [data, setData] = useState([])
     const [rowsPerPage, setRowsPerPage] = useState(15)
     const [page, setPage] = useState(0)
+    const [searchV, setSearchV] = useState('')
     const [dCount, setDcount] = useState(100)
+    const [sortType, setsortType] = useState(true)
+    const [sortField, setSortField] = useState(3)
     try {
         if (localStorage.getItem('token').length < 0) {
             history.push('/')
@@ -83,15 +100,19 @@ const Text = props => {
         history.push('/')
     }
     if (fetchState === false) {
+        var sort, field
+        sortType === true ? (sort = 'ASC') : (sort = 'DESC')
+        sortField === 1 ? (field = 'title') : sortField === 2 ? (field = 'authorname') : (field = 'tagcount')
         axios
             .get(global.config.API_ENDPOINT + props.location.pathname + '/list', {
-                params: { page: page, rows: rowsPerPage },
+                params: { page: page, rows: rowsPerPage, search: searchV, sortField: field, sortType: sort },
                 headers: {
                     token: localStorage.getItem('token')
                 }
             })
             .then(response => {
                 if (response.status === 200) {
+                    console.log(response.data.data)
                     setData(response.data.data)
                     setDcount(parseInt(response.data.count))
                     setFetchState(true)
@@ -111,7 +132,16 @@ const Text = props => {
         setRowsPerPage(event.target.value)
         setFetchState(false)
     }
-    console.log(data)
+
+    const searchChange = event => {
+        setSearchV(event.target.value)
+        setFetchState(false)
+    }
+    const sorter = (type, value) => {
+        setsortType(type)
+        setSortField(value)
+        setFetchState(false)
+    }
     return (
         <div className={classes.content}>
             <Hidden only={['xs', 'sm']}>
@@ -124,6 +154,13 @@ const Text = props => {
                             </Button>
                         </Link>
                     </div>
+                    <div className={classes.row}>
+                        <SearchInput
+                            className={classes.searchInput}
+                            onChange={e => searchChange(e)}
+                            placeholder="Search Text or Author"
+                        />
+                    </div>
                     <CardContent className={classes.content}>
                         <span className={classes.spacer} />
 
@@ -133,11 +170,124 @@ const Text = props => {
                                     {
                                         <Table>
                                             <TableHead>
-                                                <TableRow>
-                                                    <TableCell>Title</TableCell>
-                                                    <TableCell>Author</TableCell>
-                                                    <TableCell>Tag Count</TableCell>
-                                                </TableRow>
+                                                {sortField === 1 ? (
+                                                    <TableRow>
+                                                        <TableCell className={classes.selected}>
+                                                            Title
+                                                            {sortType === true ? (
+                                                                <span
+                                                                    className={classes.upDownIcon}
+                                                                    onClick={() => sorter(false, 1)}
+                                                                >
+                                                                    <ArrowUpwardIcon />
+                                                                </span>
+                                                            ) : (
+                                                                <span
+                                                                    className={classes.upDownIcon}
+                                                                    onClick={() => sorter(true, 1)}
+                                                                >
+                                                                    <ArrowDownwardIcon />
+                                                                </span>
+                                                            )}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            Author
+                                                            <span
+                                                                className={classes.upDownIcon}
+                                                                onClick={() => sorter(true, 2)}
+                                                            >
+                                                                <ArrowDownwardIcon />
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            Tag Count
+                                                            <span
+                                                                className={classes.upDownIcon}
+                                                                onClick={() => sorter(true, 3)}
+                                                            >
+                                                                <ArrowDownwardIcon />
+                                                            </span>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ) : sortField === 2 ? (
+                                                    <TableRow>
+                                                        <TableCell>
+                                                            Title
+                                                            <span
+                                                                className={classes.upDownIcon}
+                                                                onClick={() => sorter(true, 1)}
+                                                            >
+                                                                <ArrowDownwardIcon />
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell className={classes.selected}>
+                                                            Author
+                                                            {sortType === true ? (
+                                                                <span
+                                                                    className={classes.upDownIcon}
+                                                                    onClick={() => sorter(false, 2)}
+                                                                >
+                                                                    <ArrowUpwardIcon />
+                                                                </span>
+                                                            ) : (
+                                                                <span
+                                                                    className={classes.upDownIcon}
+                                                                    onClick={() => sorter(true, 2)}
+                                                                >
+                                                                    <ArrowDownwardIcon />
+                                                                </span>
+                                                            )}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            Tag Count
+                                                            <span
+                                                                className={classes.upDownIcon}
+                                                                onClick={() => sorter(true, 3)}
+                                                            >
+                                                                <ArrowDownwardIcon />
+                                                            </span>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ) : (
+                                                    <TableRow>
+                                                        <TableCell>
+                                                            Title
+                                                            <span
+                                                                className={classes.upDownIcon}
+                                                                onClick={() => sorter(true, 1)}
+                                                            >
+                                                                <ArrowDownwardIcon />
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            Author
+                                                            <span
+                                                                className={classes.upDownIcon}
+                                                                onClick={() => sorter(true, 2)}
+                                                            >
+                                                                <ArrowDownwardIcon />
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell className={classes.selected}>
+                                                            Tag Count
+                                                            {sortType === true ? (
+                                                                <span
+                                                                    className={classes.upDownIcon}
+                                                                    onClick={() => sorter(false, 3)}
+                                                                >
+                                                                    <ArrowUpwardIcon />
+                                                                </span>
+                                                            ) : (
+                                                                <span
+                                                                    className={classes.upDownIcon}
+                                                                    onClick={() => sorter(true, 3)}
+                                                                >
+                                                                    <ArrowDownwardIcon />
+                                                                </span>
+                                                            )}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                )}
                                             </TableHead>
                                             <TableBody>
                                                 {data.map(text => (

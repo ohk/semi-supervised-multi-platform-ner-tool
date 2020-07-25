@@ -258,10 +258,62 @@ isUserAdmin = async (data) => {
 list = async (data) => {
     try {
         var conneciton = pool.getPool()
-        const query = {
-            text:
-                'SELECT userid,name,surname,username,email,role,textcount,requestcount,validation FROM users ORDER BY createdat DESC LIMIT $1 OFFSET $2',
-            values: [data.rows, data.offset]
+        var query
+        if (data.sortType === 'ASC') {
+            switch (data.sortField) {
+                case 'default':
+                    query = {
+                        text:
+                            'SELECT userid,name,surname,username,email,role,textcount,requestcount,validation FROM users WHERE ((name LIKE $3) OR (surname LIKE $3) OR (username LIKE $3) OR (email LIKE $3)) ORDER BY createdat DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'username':
+                    query = {
+                        text:
+                            'SELECT userid,name,surname,username,email,role,textcount,requestcount,validation FROM users WHERE ((name LIKE $3) OR (surname LIKE $3) OR (username LIKE $3) OR (email LIKE $3)) ORDER BY username ASC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'email':
+                    query = {
+                        text:
+                            'SELECT userid,name,surname,username,email,role,textcount,requestcount,validation FROM users WHERE ((name LIKE $3) OR (surname LIKE $3) OR (username LIKE $3) OR (email LIKE $3)) ORDER BY email ASC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'tagcount':
+                    query = {
+                        text:
+                            'SELECT userid,name,surname,username,email,role,textcount,requestcount,validation FROM users WHERE ((name LIKE $3) OR (surname LIKE $3) OR (username LIKE $3) OR (email LIKE $3)) ORDER BY textcount ASC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+            }
+        } else {
+            switch (data.sortField) {
+                case 'username':
+                    query = {
+                        text:
+                            'SELECT userid,name,surname,username,email,role,textcount,requestcount,validation FROM users WHERE ((name LIKE $3) OR (surname LIKE $3) OR (username LIKE $3) OR (email LIKE $3)) ORDER BY username DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'email':
+                    query = {
+                        text:
+                            'SELECT userid,name,surname,username,email,role,textcount,requestcount,validation FROM users WHERE ((name LIKE $3) OR (surname LIKE $3) OR (username LIKE $3) OR (email LIKE $3)) ORDER BY email DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'tagcount':
+                    query = {
+                        text:
+                            'SELECT userid,name,surname,username,email,role,textcount,requestcount,validation FROM users WHERE ((name LIKE $3) OR (surname LIKE $3) OR (username LIKE $3) OR (email LIKE $3)) ORDER BY textcount DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+            }
         }
         user = await conneciton.query(query)
         const queryC = {
@@ -270,6 +322,7 @@ list = async (data) => {
         count = await conneciton.query(queryC)
         return { status: true, data: user.rows, count: count.rows[0].count }
     } catch (error) {
+        console.log(error)
         return { status: false, data: [] }
     }
 }

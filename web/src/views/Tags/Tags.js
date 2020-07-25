@@ -4,9 +4,10 @@ import PropTypes from 'prop-types'
 import axios from 'axios'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { Link as RouterLink, withRouter } from 'react-router-dom'
-
+import EditIcon from '@material-ui/icons/Edit'
 import {
     Card,
+    Grid,
     CardActions,
     CardContent,
     Link,
@@ -24,7 +25,9 @@ const useStyles = makeStyles(theme => ({
     root: {
         padding: theme.spacing(4)
     },
-
+    righter: {
+        float: 'right'
+    },
     button: {
         float: 'right',
         display: 'block',
@@ -120,6 +123,7 @@ const Tags = props => {
             })
             .then(response => {
                 if (response.status === 200) {
+                    console.log(response.data.data)
                     setData(response.data.data)
                     setDcount(parseInt(response.data.count))
                     setFetchState(true)
@@ -140,6 +144,23 @@ const Tags = props => {
         setFetchState(false)
     }
 
+    const changeOpener = event => {
+        var id = -1
+        id =
+            event.target.parentNode.parentNode.getAttribute('id') ||
+            event.target.parentNode.parentNode.parentNode.getAttribute('id') ||
+            event.target.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute('id') ||
+            event.target.parentNode.parentNode.parentNode.getAttribute('id') ||
+            event.target.parentNode.parentNode.parentNode.parentNode.getAttribute('id')
+
+        const elm = document.getElementById(id)
+
+        var colorCode = elm.childNodes[2].innerHTML
+        const alias = elm.childNodes[1].innerHTML
+        colorCode = colorCode.substring(1)
+        history.push(`/editTag?id=${id}&colorCode=${colorCode}&alias=${alias}`)
+    }
+
     return (
         <div className={classes.content}>
             <Card className={classes.root}>
@@ -148,86 +169,134 @@ const Tags = props => {
 
                     <Hidden only={['xs', 'sm']}>
                         <PerfectScrollbar>
-                            <div className={classes.contentBody}>
-                                <div className={classes.row}>
-                                    <span className={classes.spacer} />
-                                    <Link component={RouterLink} to={'/addTag'} variant="h6">
-                                        <Button color="primary" variant="contained">
-                                            Add Tag Type
-                                        </Button>
-                                    </Link>
-                                </div>
-                            </div>
-                            <div className={classes.content}>
+                            <div className={classes.righter}>
                                 <div className={classes.contentBody}>
-                                    {
-                                        <Table className={classes.table}>
-                                            <TableHead>
-                                                <TableRow>
-                                                    <TableCell className={classes.tablecell}>Tagname</TableCell>
-                                                    <TableCell className={classes.tablecell}>Color</TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {data.map(type =>
-                                                    type.tagname !== 'O' ? (
-                                                        <TableRow
-                                                            className={classes.tableRow}
-                                                            hover
-                                                            key={type.tagtypeid}
-                                                            id={type.tagtypeid}
-                                                        >
-                                                            <TableCell
-                                                                className={classes.tablecell}
-                                                                style={{ color: type.color }}
-                                                            >
-                                                                {type.tagname}
-                                                            </TableCell>
-                                                            <TableCell
-                                                                className={classes.tablecell}
-                                                                style={{ background: type.color, color: 'white' }}
-                                                            >
-                                                                {type.color}
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    ) : (
-                                                        <TableRow
-                                                            className={classes.tableRow}
-                                                            hover
-                                                            key={type.tagtypeid}
-                                                            id={type.tagtypeid}
-                                                        >
-                                                            <TableCell
-                                                                className={classes.tablecell}
-                                                                style={{ color: 'black' }}
-                                                            >
-                                                                {type.tagname}
-                                                            </TableCell>
-                                                            <TableCell
-                                                                className={classes.tablecell}
-                                                                style={{ background: type.color, color: 'black' }}
-                                                            >
-                                                                {type.color}
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    )
-                                                )}
-                                            </TableBody>
-                                        </Table>
-                                    }
+                                    <div className={classes.row}>
+                                        <span className={classes.spacer} />
+                                        <Link component={RouterLink} to={'/addTag'} variant="h6">
+                                            <Button color="primary" variant="contained">
+                                                Add Tag Type
+                                            </Button>
+                                        </Link>
+                                    </div>
                                 </div>
-                                <CardActions className={classes.actions}>
-                                    <TablePagination
-                                        component="div"
-                                        count={dCount}
-                                        onChangePage={handlePageChange}
-                                        onChangeRowsPerPage={handleRowsPerPageChange}
-                                        page={page}
-                                        rowsPerPage={rowsPerPage}
-                                        rowsPerPageOptions={[15, 25, 50]}
-                                    />
-                                </CardActions>
                             </div>
+                            <Grid container className={classes.content} spacing={6}>
+                                <Grid item lg={7}>
+                                    <div className={classes.content}>
+                                        <div className={classes.contentBody}>
+                                            {
+                                                <Table className={classes.table}>
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            <TableCell className={classes.tablecell}>
+                                                                Tag Name
+                                                            </TableCell>
+                                                            <TableCell className={classes.tablecell}>
+                                                                Tag Alias
+                                                            </TableCell>
+                                                            <TableCell className={classes.tablecell}>Color</TableCell>
+                                                            <TableCell className={classes.tablecell}>Actions</TableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        {data.map(type =>
+                                                            type.tagname !== 'O' ? (
+                                                                <TableRow
+                                                                    className={classes.tableRow}
+                                                                    hover
+                                                                    key={type.tagtypeid}
+                                                                    id={type.tagtypeid}
+                                                                >
+                                                                    <TableCell
+                                                                        className={classes.tablecell}
+                                                                        style={{ color: type.color }}
+                                                                    >
+                                                                        {type.tagname}
+                                                                    </TableCell>
+                                                                    <TableCell
+                                                                        className={classes.tablecell}
+                                                                        style={{ color: type.color }}
+                                                                    >
+                                                                        {type.tagalias}
+                                                                    </TableCell>
+                                                                    <TableCell
+                                                                        className={classes.tablecell}
+                                                                        style={{
+                                                                            background: type.color,
+                                                                            color: 'white'
+                                                                        }}
+                                                                    >
+                                                                        {type.color}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        <Button
+                                                                            onClick={e => {
+                                                                                changeOpener(e)
+                                                                            }}
+                                                                        >
+                                                                            <EditIcon /> Edit
+                                                                        </Button>
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            ) : (
+                                                                <TableRow
+                                                                    className={classes.tableRow}
+                                                                    hover
+                                                                    key={type.tagtypeid}
+                                                                    id={type.tagtypeid}
+                                                                >
+                                                                    <TableCell
+                                                                        className={classes.tablecell}
+                                                                        style={{ color: 'black' }}
+                                                                    >
+                                                                        {type.tagname}
+                                                                    </TableCell>
+                                                                    <TableCell
+                                                                        className={classes.tablecell}
+                                                                        style={{ color: 'black' }}
+                                                                    >
+                                                                        {type.tagalias}
+                                                                    </TableCell>
+                                                                    <TableCell
+                                                                        className={classes.tablecell}
+                                                                        style={{
+                                                                            background: type.color,
+                                                                            color: 'black'
+                                                                        }}
+                                                                    >
+                                                                        {type.color}
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                        <Button
+                                                                            onClick={e => {
+                                                                                changeOpener(e)
+                                                                            }}
+                                                                        >
+                                                                            <EditIcon /> Edit
+                                                                        </Button>
+                                                                    </TableCell>
+                                                                </TableRow>
+                                                            )
+                                                        )}
+                                                    </TableBody>
+                                                </Table>
+                                            }
+                                        </div>
+                                    </div>
+                                </Grid>
+                            </Grid>
+                            <CardActions className={classes.actions}>
+                                <TablePagination
+                                    component="div"
+                                    count={dCount}
+                                    onChangePage={handlePageChange}
+                                    onChangeRowsPerPage={handleRowsPerPageChange}
+                                    page={page}
+                                    rowsPerPage={rowsPerPage}
+                                    rowsPerPageOptions={[15, 25, 50]}
+                                />
+                            </CardActions>
                         </PerfectScrollbar>
                     </Hidden>
 

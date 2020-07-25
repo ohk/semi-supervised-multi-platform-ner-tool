@@ -5,7 +5,6 @@ import validate from 'validate.js'
 import { makeStyles } from '@material-ui/styles'
 import { Grid, Button, TextField, Typography } from '@material-ui/core'
 import axios from 'axios'
-import ReactFileReader from 'react-file-reader'
 import MuiAlert from '@material-ui/lab/Alert'
 
 function Alert(props) {
@@ -143,6 +142,7 @@ const AddText = props => {
         touched: {},
         errors: {}
     })
+    const [file, setFile] = useState()
 
     useEffect(() => {
         const errors = validate(formState.values, schema)
@@ -171,10 +171,16 @@ const AddText = props => {
     }
 
     let fileReader
-
+    let fileName = ''
     const handleFileRead = e => {
+        console.log(fileReader)
         const content = fileReader.result
         console.log(content)
+        formState.values.content = content
+        formState.values.title = fileName
+        formState.isValid = true
+        console.log(formState.values.content)
+        setFile(true)
         // … do something with the 'content' …
     }
 
@@ -182,6 +188,8 @@ const AddText = props => {
         fileReader = new FileReader()
         fileReader.onloadend = handleFileRead
         fileReader.readAsText(file)
+        fileName = file.name
+        console.log(file)
     }
 
     const handleSignUp = event => {

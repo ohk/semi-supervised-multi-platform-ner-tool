@@ -3,9 +3,62 @@ const pool = require('./pool')
 list = async (data) => {
     try {
         var conneciton = pool.getPool()
-        const query = {
-            text: 'SELECT * FROM author WHERE authorid != 1 ORDER BY authorid ASC LIMIT $1 OFFSET $2',
-            values: [data.rows, data.offset]
+        var query
+        if (data.sortType === 'ASC') {
+            switch (data.sortField) {
+                case 'default':
+                    query = {
+                        text:
+                            'SELECT * FROM author WHERE authorid != 1 AND ((authorname LIKE $3) OR (authorname LIKE $3)) ORDER BY authorid ASC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'category':
+                    query = {
+                        text:
+                            'SELECT * FROM author WHERE authorid != 1 AND ((authorname LIKE $3) OR (authorname LIKE $3)) ORDER BY category ASC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'authorname':
+                    query = {
+                        text:
+                            'SELECT * FROM author WHERE authorid != 1 AND ((authorname LIKE $3) OR (authorname LIKE $3)) ORDER BY authorname ASC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'textcount':
+                    query = {
+                        text:
+                            'SELECT * FROM author WHERE authorid != 1 AND ((authorname LIKE $3) OR (authorname LIKE $3)) ORDER BY textcount ASC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+            }
+        } else {
+            switch (data.sortField) {
+                case 'category':
+                    query = {
+                        text:
+                            'SELECT * FROM author WHERE authorid != 1 AND ((authorname LIKE $3) OR (authorname LIKE $3)) ORDER BY category DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'authorname':
+                    query = {
+                        text:
+                            'SELECT * FROM author WHERE authorid != 1 AND ((authorname LIKE $3) OR (authorname LIKE $3)) ORDER BY authorname DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+                case 'textcount':
+                    query = {
+                        text:
+                            'SELECT * FROM author WHERE authorid != 1 AND ((authorname LIKE $3) OR (authorname LIKE $3)) ORDER BY textcount DESC LIMIT $1 OFFSET $2',
+                        values: [data.rows, data.offset, data.search]
+                    }
+                    break
+            }
         }
         authors = await conneciton.query(query)
         const queryC = {
@@ -14,6 +67,7 @@ list = async (data) => {
         count = await conneciton.query(queryC)
         return { status: true, data: authors.rows, count: count.rows[0].count }
     } catch (error) {
+        console.log(error)
         return { status: false, data: [] }
     }
 }

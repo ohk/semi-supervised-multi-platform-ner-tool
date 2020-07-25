@@ -33,13 +33,18 @@ CREATE TABLE IF NOT EXISTS users (
   updatedAt TIMESTAMP,
   validation BOOLEAN NOT NULL DEFAULT 'false',
   role INT DEFAULT 1,
-  notes VARCHAR,
   textCount INT DEFAULT 0,
   requestCount INT DEFAULT 0,
   PRIMARY KEY (userID),
   UNIQUE (username),
   UNIQUE (email));
 
+CREATE TABLE IF NOT EXISTS categories (
+  categoryID SERIAL NOT NULL ,
+  name VARCHAR NOT NULL,
+  
+  PRIMARY KEY (categoryID),
+  UNIQUE (name));
 
 -- -----------------------------------------------------
 -- Table `mydb`.`loginLog`
@@ -155,8 +160,9 @@ CREATE TABLE IF NOT EXISTS word (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS tagType (
   tagTypeID SERIAL NOT NULL,
-  tagName VARCHAR,
-  color VARCHAR(45),
+  tagName VARCHAR UNIQUE,
+  tagAlias VARCHAR UNIQUE,
+  color VARCHAR(45) UNIQUE,
   PRIMARY KEY (tagTypeID));
 
 
@@ -283,12 +289,15 @@ INSERT INTO nertrainrecord(path) VALUES ('');
 INSERT INTO trainexcluded(trainrecordid, key, value) VALUES (1, 'begin', '1970-01-01 11:17:15.409152+03');
 
 
-INSERT INTO tagtype(tagname, color) VALUES ( 'MONEY', '#008000');
-INSERT INTO tagtype(tagname, color) VALUES ( 'PERSON', '#0000FF');
-INSERT INTO tagtype(tagname, color) VALUES ( 'LOCATION', '#45046a');
-INSERT INTO tagtype(tagname, color) VALUES ( 'ORGANIZATION', '#ff5200');
-INSERT INTO tagtype(tagname, color) VALUES ( 'PERCENT', '#9a1f40');
-INSERT INTO tagtype(tagname, color) VALUES ( 'DATE', '#30475e');
-INSERT INTO tagtype(tagname, color) VALUES ( 'TIME', '#512b58');
-INSERT INTO tagtype(tagname, color) VALUES ( 'O', '#FFFFFF');
-\
+INSERT INTO tagtype(tagname,tagalias, color) VALUES ( 'MONEY','MONEY', '#008000');
+INSERT INTO tagtype(tagname,tagalias, color) VALUES ( 'PERSON','PERSON', '#0000FF');
+INSERT INTO tagtype(tagname,tagalias, color) VALUES ( 'LOCATION','LOCATION', '#45046a');
+INSERT INTO tagtype(tagname,tagalias, color) VALUES ( 'ORGANIZATION','ORGANIZATION', '#ff5200');
+INSERT INTO tagtype(tagname,tagalias, color) VALUES ( 'PERCENT','PERCENT', '#9a1f40');
+INSERT INTO tagtype(tagname,tagalias, color) VALUES ( 'DATE','DATE', '#30475e');
+INSERT INTO tagtype(tagname,tagalias, color) VALUES ( 'TIME','TIME', '#512b58');
+INSERT INTO tagtype(tagname,tagalias, color) VALUES ( 'O','OTHER', '#FFFFFF');
+
+INSERT INTO setting(key, value) VALUES ('train_day', 7);
+INSERT INTO setting(key, value) VALUES ('train_count', 500);
+INSERT INTO setting(key, value) VALUES ('last_train_count', 0);

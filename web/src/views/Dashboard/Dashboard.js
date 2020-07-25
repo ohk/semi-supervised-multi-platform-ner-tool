@@ -17,7 +17,8 @@ import {
     Top6Users,
     Top6Authors,
     Last10User,
-    Last10Login
+    Last10Login,
+    LastTagCount
 } from './components'
 
 const useStyles = makeStyles(theme => ({
@@ -50,6 +51,7 @@ const Dashboard = props => {
                 console.log(response.data)
 
                 if (response.status === 200) {
+                    console.log(response.data)
                     setData(response.data)
                     setFetchState(true)
                 }
@@ -82,9 +84,10 @@ const Dashboard = props => {
                     <Grid item lg={3} sm={6} xl={3} xs={12}>
                         <TotalUser value={data.totalUser} />
                     </Grid>
-
+                    <Grid item lg={3} sm={6} xl={3} xs={12}>
+                        <LastTagCount value={data.lastTrainCount} />
+                    </Grid>
                     <Hidden only={['xs', 'sm']}>
-                        <Grid item lg={3} sm={6} xl={3} xs={12}></Grid>
                         <Grid item lg={3} sm={6} xl={3} xs={12}></Grid>
                     </Hidden>
                     <Grid item lg={4} md={6} xl={3} xs={12}>

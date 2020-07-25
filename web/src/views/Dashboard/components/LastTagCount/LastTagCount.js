@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/styles'
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core'
-import AutorenewIcon from '@material-ui/icons/Autorenew'
+import UpdateIcon from '@material-ui/icons/Update'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -44,12 +44,12 @@ const TotalTag = props => {
                 <Grid container justify="space-evenly">
                     <Grid item>
                         <Avatar className={classes.avatar}>
-                            <AutorenewIcon className={classes.icon} />
+                            <UpdateIcon className={classes.icon} />
                         </Avatar>
                     </Grid>
                     <Grid item>
                         <Typography className={classes.title} color="inherit" gutterBottom variant="body2">
-                            TOTAL TRAIN COUNT
+                            TAG COUNT FROM LAST TRAIN
                         </Typography>
                         <Typography color="inherit" variant="h3">
                             {value}

@@ -10,6 +10,9 @@ import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount'
 import PermIdentityIcon from '@material-ui/icons/PermIdentity'
 import PersonIcon from '@material-ui/icons/Person'
 import MuiAlert from '@material-ui/lab/Alert'
+import { SearchInput } from 'components'
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 
 import {
     Card,
@@ -34,7 +37,12 @@ const useStyles = makeStyles(theme => ({
     root: {
         padding: theme.spacing(4)
     },
-
+    upDownIcon: {
+        float: 'right',
+        '&:hover': {
+            background: '#e3e3e3'
+        }
+    },
     button: {
         float: 'right',
         display: 'block',
@@ -56,6 +64,10 @@ const useStyles = makeStyles(theme => ({
     content: {
         marginTop: theme.spacing(2),
         padding: 10
+    },
+    selected: {
+        color: 'red',
+        'text-align': 'center'
     },
     nameC: {
         'text-transform': 'capitalize'
@@ -96,6 +108,11 @@ const Users = props => {
     const [mes, setMes] = useState('')
     const [open, setOpen] = React.useState(false)
     const [severe, setSevere] = useState('')
+
+    const [searchV, setSearchV] = useState('')
+    const [sortType, setsortType] = useState(true)
+    const [sortField, setSortField] = useState(0)
+
     try {
         if (localStorage.getItem('token').length < 0) {
             history.push('/')
@@ -106,12 +123,22 @@ const Users = props => {
         history.push('/')
     }
     if (fetchState === false) {
+        var sort, field
+        sortType === true ? (sort = 'ASC') : (sort = 'DESC')
+        sortField === 0
+            ? (field = 'default')
+            : sortField === 1
+            ? (field = 'username')
+            : sortField === 2
+            ? (field = 'email')
+            : (field = 'tagcount')
+
         axios
             .get(
                 global.config.API_ENDPOINT + '/system/getusers',
 
                 {
-                    params: { page: page, rows: rowsPerPage },
+                    params: { page: page, rows: rowsPerPage, search: searchV, sortField: field, sortType: sort },
                     headers: {
                         token: localStorage.getItem('token')
                     }
@@ -352,6 +379,16 @@ const Users = props => {
         setOpen(false)
     }
 
+    const searchChange = event => {
+        setSearchV(event.target.value)
+        setFetchState(false)
+    }
+    const sorter = (type, value) => {
+        setsortType(type)
+        setSortField(value)
+        setFetchState(false)
+    }
+
     return (
         <div className={classes.content}>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
@@ -363,24 +400,161 @@ const Users = props => {
                 <Card className={classes.root}>
                     <CardContent className={classes.content}>
                         <span className={classes.spacer} />
-
+                        <div className={classes.row}>
+                            <SearchInput
+                                className={classes.searchInput}
+                                onChange={e => searchChange(e)}
+                                placeholder="Search User"
+                            />
+                        </div>
                         <PerfectScrollbar>
                             <div className={classes.content}>
                                 <div className={classes.inner}>
                                     {
                                         <Table className={classes.table}>
                                             <TableHead>
-                                                <TableRow>
-                                                    <TableCell className={classes.tablecell}>Name</TableCell>
-                                                    <TableCell className={classes.tablecell}>Surname</TableCell>
-                                                    <TableCell className={classes.tablecell}>Username</TableCell>
-                                                    <TableCell className={classes.tablecell}>Email</TableCell>
-                                                    <TableCell className={classes.tablecell}>Role</TableCell>
-                                                    <TableCell className={classes.tablecell}>Tag Count</TableCell>
-                                                    <TableCell className={classes.tablecell}>Request Count</TableCell>
-                                                    <TableCell className={classes.tablecell}>Validation</TableCell>
-                                                    <TableCell className={classes.tablecell}>Actions</TableCell>
-                                                </TableRow>
+                                                {sortField === 1 ? (
+                                                    <TableRow>
+                                                        <TableCell className={classes.tablecell}>Name</TableCell>
+                                                        <TableCell className={classes.tablecell}>Surname</TableCell>
+                                                        <TableCell className={classes.selected}>
+                                                            Username
+                                                            {sortType === true ? (
+                                                                <span
+                                                                    className={classes.upDownIcon}
+                                                                    onClick={() => sorter(false, 1)}
+                                                                >
+                                                                    <ArrowUpwardIcon />
+                                                                </span>
+                                                            ) : (
+                                                                <span
+                                                                    className={classes.upDownIcon}
+                                                                    onClick={() => sorter(true, 1)}
+                                                                >
+                                                                    <ArrowDownwardIcon />
+                                                                </span>
+                                                            )}
+                                                        </TableCell>
+                                                        <TableCell className={classes.tablecell}>
+                                                            Email
+                                                            <span
+                                                                className={classes.upDownIcon}
+                                                                onClick={() => sorter(true, 2)}
+                                                            >
+                                                                <ArrowDownwardIcon />
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell className={classes.tablecell}>Role</TableCell>
+                                                        <TableCell className={classes.tablecell}>
+                                                            Tag Count
+                                                            <span
+                                                                className={classes.upDownIcon}
+                                                                onClick={() => sorter(true, 3)}
+                                                            >
+                                                                <ArrowDownwardIcon />
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell className={classes.tablecell}>
+                                                            Request Count
+                                                        </TableCell>
+                                                        <TableCell className={classes.tablecell}>Validation</TableCell>
+                                                        <TableCell className={classes.tablecell}>Actions</TableCell>
+                                                    </TableRow>
+                                                ) : sortField === 2 ? (
+                                                    <TableRow>
+                                                        <TableCell className={classes.tablecell}>Name</TableCell>
+                                                        <TableCell className={classes.tablecell}>Surname</TableCell>
+                                                        <TableCell className={classes.tablecell}>
+                                                            Username
+                                                            <span
+                                                                className={classes.upDownIcon}
+                                                                onClick={() => sorter(true, 1)}
+                                                            >
+                                                                <ArrowDownwardIcon />
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell className={classes.selected}>
+                                                            Email
+                                                            {sortType === true ? (
+                                                                <span
+                                                                    className={classes.upDownIcon}
+                                                                    onClick={() => sorter(false, 2)}
+                                                                >
+                                                                    <ArrowUpwardIcon />
+                                                                </span>
+                                                            ) : (
+                                                                <span
+                                                                    className={classes.upDownIcon}
+                                                                    onClick={() => sorter(true, 2)}
+                                                                >
+                                                                    <ArrowDownwardIcon />
+                                                                </span>
+                                                            )}
+                                                        </TableCell>
+                                                        <TableCell className={classes.tablecell}>Role</TableCell>
+                                                        <TableCell className={classes.tablecell}>
+                                                            Tag Count
+                                                            <span
+                                                                className={classes.upDownIcon}
+                                                                onClick={() => sorter(true, 3)}
+                                                            >
+                                                                <ArrowDownwardIcon />
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell className={classes.tablecell}>
+                                                            Request Count
+                                                        </TableCell>
+                                                        <TableCell className={classes.tablecell}>Validation</TableCell>
+                                                        <TableCell className={classes.tablecell}>Actions</TableCell>
+                                                    </TableRow>
+                                                ) : (
+                                                    <TableRow>
+                                                        <TableCell className={classes.tablecell}>Name</TableCell>
+                                                        <TableCell className={classes.tablecell}>Surname</TableCell>
+                                                        <TableCell className={classes.tablecell}>
+                                                            Username
+                                                            <span
+                                                                className={classes.upDownIcon}
+                                                                onClick={() => sorter(true, 1)}
+                                                            >
+                                                                <ArrowDownwardIcon />
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell className={classes.tablecell}>
+                                                            Email
+                                                            <span
+                                                                className={classes.upDownIcon}
+                                                                onClick={() => sorter(true, 2)}
+                                                            >
+                                                                <ArrowDownwardIcon />
+                                                            </span>
+                                                        </TableCell>
+                                                        <TableCell className={classes.tablecell}>Role</TableCell>
+                                                        <TableCell className={classes.selected}>
+                                                            Tag Count
+                                                            {sortType === true ? (
+                                                                <span
+                                                                    className={classes.upDownIcon}
+                                                                    onClick={() => sorter(false, 3)}
+                                                                >
+                                                                    <ArrowUpwardIcon />
+                                                                </span>
+                                                            ) : (
+                                                                <span
+                                                                    className={classes.upDownIcon}
+                                                                    onClick={() => sorter(true, 3)}
+                                                                >
+                                                                    <ArrowDownwardIcon />
+                                                                </span>
+                                                            )}
+                                                        </TableCell>
+                                                        <TableCell className={classes.tablecell}>
+                                                            Request Count
+                                                        </TableCell>
+                                                        <TableCell className={classes.tablecell}>Validation</TableCell>
+                                                        <TableCell className={classes.tablecell}>Actions</TableCell>
+                                                    </TableRow>
+                                                )}
                                             </TableHead>
                                             <TableBody>
                                                 {data.map(user => (

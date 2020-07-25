@@ -43,7 +43,11 @@ const Tagger = props => {
             .then(response => {
                 if (response.status === 200) {
                     setTags(response.data.data.text)
-                    setTypes(response.data.data.types)
+                    setTypes(
+                        response.data.data.types.sort(function(a, b) {
+                            return a.tagtypeid - b.tagtypeid
+                        })
+                    )
                     setFetchState(true)
                 }
             })
@@ -85,8 +89,8 @@ const Tagger = props => {
                     setOp(1)
                     setMes(response.data.message)
                     setTimeout(() => {
-                        history.push('/dashboard')
-                    }, 3000)
+                        history.push('/text')
+                    }, 1000)
                 } else {
                     setOp(-1)
                     setMes(response.data.message)
@@ -101,6 +105,7 @@ const Tagger = props => {
     if (types.length > 0) {
         console.log(types[1].color)
     }
+    console.log(types)
     return (
         <div className={classes.root}>
             {op === 0 ? (
@@ -117,7 +122,7 @@ const Tagger = props => {
                                         tagtypeid={tag.tagtypeid}
                                     >
                                         <mark
-                                            type={types[tag.tagtypeid - 1].tagname}
+                                            type={types[tag.tagtypeid - 1].tagalias}
                                             className="data-entity"
                                             key={tag.wordid}
                                             style={{
@@ -142,7 +147,7 @@ const Tagger = props => {
                                                         handleClick(e)
                                                     }}
                                                 >
-                                                    {type.tagname}
+                                                    {type.tagalias}
                                                 </span>
                                             ))}
                                         </div>
@@ -168,7 +173,7 @@ const Tagger = props => {
                                                         handleClick(e)
                                                     }}
                                                 >
-                                                    {type.tagname}
+                                                    {type.tagalias}
                                                 </span>
                                             ))}
                                         </div>

@@ -21,7 +21,7 @@ train = async () => {
     returnData = server.setClassifier(modelPath.data)
     server.start()
 }
-schedule.scheduleJob('0 0 * * 0', async () => {
+/*schedule.scheduleJob('0 0 * * 0', async () => {
     filename = await DB.Train.createTrainFile()
     const classifiers = new Classifier(
         path.join(__dirname, `./trainfiles/${filename}.tsv`),
@@ -35,7 +35,7 @@ schedule.scheduleJob('0 0 * * 0', async () => {
     modelPath = await DB.Train.getTrainRecordPath()
     returnData = server.setClassifier(modelPath.data)
     server.start()
-})
+})*/
 
 module.exports = {
     server,

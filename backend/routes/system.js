@@ -12,6 +12,15 @@ router.get('/getUsers', verify, async (req, res) => {
             data = {}
             page = parseInt(req.query.page || 0)
             row = parseInt(req.query.rows || 15)
+
+            search = '%' + (req.query.search || '') + '%'
+            data.search = search
+
+            sortField = req.query.sortField || 'default'
+            sortType = req.query.sortType || 'ASC'
+            data.sortField = sortField
+            data.sortType = sortType
+
             data.rows = row
             data.offset = page * row
             result = await DB.User.list(data)
@@ -30,6 +39,15 @@ router.get('/getAuthors', verify, async (req, res) => {
             data = {}
             page = parseInt(req.query.page || 0)
             row = parseInt(req.query.rows || 15)
+
+            search = '%' + (req.query.search || '') + '%'
+            data.search = search
+
+            sortField = req.query.sortField || 'default'
+            sortType = req.query.sortType || 'ASC'
+            data.sortField = sortField
+            data.sortType = sortType
+
             data.rows = row
             data.offset = page * row
             result = await DB.Author.list(data)
@@ -46,6 +64,20 @@ router.get('/getSettings', verify, async (req, res) => {
         isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
         if (isUserAdmin.status === true) {
             result = await DB.Settings.list()
+            res.status(200).send(result)
+        } else {
+            res.status(401).send('Only for admin')
+        }
+    } catch (error) {
+        res.status(400).send({ status: false, error: error })
+    }
+})
+
+router.get('/testSett', verify, async (req, res) => {
+    try {
+        isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
+        if (isUserAdmin.status === true) {
+            result = await DB.Settings.update_train_count()
             res.status(200).send(result)
         } else {
             res.status(401).send('Only for admin')
@@ -285,6 +317,19 @@ router.post('/updateSetting', verify, async (req, res) => {
         res.status(400).send({ status: false, error: error })
     }
 })
+router.post('/updateTrainFreq', verify, async (req, res) => {
+    try {
+        isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
+        if (isUserAdmin.status === true) {
+            result = await DB.Settings.updateM(req.body)
+            res.status(200).send(result)
+        } else {
+            res.status(401).send('Only for admin')
+        }
+    } catch (error) {
+        res.status(400).send({ status: false, error: error })
+    }
+})
 
 router.post('/addTagType', verify, async (req, res) => {
     try {
@@ -346,6 +391,22 @@ router.post('/manuelTrain', verify, async (req, res) => {
         if (isUserAdmin.status === true) {
             serverB.train()
             res.status(200).send({ status: true, message: 'Train started ...' })
+        } else {
+            res.status(401).send('Only for admin')
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(400).send({ status: false, error: error })
+    }
+})
+
+router.post('/editTagType', verify, async (req, res) => {
+    try {
+        isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
+        if (isUserAdmin.status === true) {
+            console.log(req.body)
+            result = await DB.Tag.editTag(req.body)
+            res.status(200).send(result)
         } else {
             res.status(401).send('Only for admin')
         }
