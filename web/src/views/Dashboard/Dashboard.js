@@ -35,6 +35,8 @@ const Dashboard = props => {
     try {
         if (localStorage.getItem('token').length < 0) {
             history.push('/')
+        } else if (localStorage.getItem('isAdmin') === 'false') {
+            history.push('/text')
         }
     } catch (error) {
         history.push('/')
