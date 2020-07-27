@@ -39,13 +39,6 @@ CREATE TABLE IF NOT EXISTS users (
   UNIQUE (username),
   UNIQUE (email));
 
-CREATE TABLE IF NOT EXISTS categories (
-  categoryID SERIAL NOT NULL ,
-  name VARCHAR NOT NULL,
-  
-  PRIMARY KEY (categoryID),
-  UNIQUE (name));
-
 -- -----------------------------------------------------
 -- Table `mydb`.`loginLog`
 -- -----------------------------------------------------
