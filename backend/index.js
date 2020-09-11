@@ -95,10 +95,10 @@ const systemRoute = require('./routes/system.js')
  *
  */
 
-app.use('/api/text', textRoute)
-app.use('/api/user', userRoute)
-app.use('/api/dashboard', dashRoute)
-app.use('/api/system', systemRoute)
+app.use('/text', textRoute)
+app.use('/user', userRoute)
+app.use('/dashboard', dashRoute)
+app.use('/system', systemRoute)
 app.listen(PORT, () => {
     console.log('Server Up! Listen port ' + PORT)
 })
