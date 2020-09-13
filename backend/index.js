@@ -84,7 +84,7 @@ app.use(expressip().getIpInfoMiddleware)
  *
  *
  **/
-
+const testRoute = require('./routes/test.js')
 const textRoute = require('./routes/text.js')
 const userRoute = require('./routes/user.js')
 const dashRoute = require('./routes/dashboard.js')
@@ -94,7 +94,7 @@ const systemRoute = require('./routes/system.js')
  * Route Middlewares
  *
  */
-
+app.use('/test', testRoute)
 app.use('/text', textRoute)
 app.use('/user', userRoute)
 app.use('/dashboard', dashRoute)
