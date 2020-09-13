@@ -16,5 +16,6 @@ module.exports = {
     EMAIL_NAME: process.env.EMAIL_NAME,
     TOKEN_SECRET: process.env.TOKEN_SECRET,
     PORT: process.env.PORT,
+    DOMAIN: process.env.DOMAIN,
     PG_IDLE_TIMEOUT_MILLIS: process.env.PG_IDLE_TIMEOUT_MILLIS
 }
