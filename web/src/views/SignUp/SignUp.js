@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/styles'
 import { Grid, Button, IconButton, TextField, Link, FormHelperText, Checkbox, Typography } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import axios from 'axios'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 import MuiAlert from '@material-ui/lab/Alert'
 
@@ -56,6 +57,10 @@ const schema = {
 }
 
 const useStyles = makeStyles(theme => ({
+    captcha: {
+        'padding-top': '20px',
+        display: 'none'
+    },
     gridCenter: {
         height: '100%',
         display: 'flex',
@@ -170,6 +175,11 @@ const SignUp = props => {
 
     const [createState, setCreateState] = useState(false)
     const [errorState, setErrorState] = useState(false)
+
+    /**
+     * Only for testing
+     */
+    const [recaptchaState, setRecaptchaState] = useState(true)
     const [errMessage, setErrMessage] = useState('')
     const [formState, setFormState] = useState({
         isValid: false,
@@ -211,7 +221,6 @@ const SignUp = props => {
     const handleSignUp = event => {
         event.preventDefault()
         const username = formState.values.username
-        console.log(username.includes('@'))
         if (username.includes('@')) {
             setErrMessage('username cannot contain @')
             setErrorState(true)
@@ -225,7 +234,6 @@ const SignUp = props => {
                     email: formState.values.email
                 })
                 .then(response => {
-                    console.log(response)
                     if (response.status === 200) {
                         setCreateState(true)
                     }
@@ -234,16 +242,12 @@ const SignUp = props => {
                     }, 3000)
                 })
                 .catch(error => {
-                    if (createState === true) {
-                        console.log(createState)
-                    } else {
+                    if (createState !== true) {
                         try {
-                            console.log(error.response)
                             const m = error.response.data.message
                             setErrMessage(m)
                             setErrorState(true)
                         } catch (error) {
-                            console.log(error)
                             setErrMessage('Please contact the developer.')
                             setErrorState(true)
                         }
@@ -251,10 +255,10 @@ const SignUp = props => {
                 })
         }
     }
-    console.log()
     const hasError = field => (formState.touched[field] && formState.errors[field] ? true : false)
-
-    console.log(errorState, errMessage)
+    const recaptcha = value => {
+        value !== null ? setRecaptchaState(true) : setRecaptchaState(false)
+    }
     return (
         <div className={classes.root}>
             <Grid className={classes.grid} container>
@@ -379,10 +383,13 @@ const SignUp = props => {
                                     {hasError('policy') && (
                                         <FormHelperText error>{formState.errors.policy[0]}</FormHelperText>
                                     )}
+                                    <div className={classes.captcha}>
+                                        <ReCAPTCHA sitekey={global.config.GOOGLE_RECAPTCHA_KEY} onChange={recaptcha} />
+                                    </div>
                                     <Button
                                         className={classes.signUpButton}
                                         color="primary"
-                                        disabled={!formState.isValid}
+                                        disabled={recaptchaState !== true || !formState.isValid}
                                         fullWidth
                                         size="large"
                                         type="submit"
@@ -390,6 +397,7 @@ const SignUp = props => {
                                     >
                                         Sign up now
                                     </Button>
+
                                     <Typography color="textSecondary" variant="body1">
                                         Have an account?{' '}
                                         <Link component={RouterLink} to="/" variant="h6">

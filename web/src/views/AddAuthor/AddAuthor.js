@@ -30,9 +30,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        //alignItems: 'center',
         textAlign: 'center'
-        //flexBasis: '600px'
     },
     root: {
         backgroundColor: theme.palette.background.default,
@@ -182,9 +180,8 @@ const AddText = props => {
                     mainurl: formState.values.mainurl,
                     authorname: formState.values.authorname,
                     category: formState.values.category,
-                    crawl: false
-                    //crawl: formState.values.correction,
-                    //count: formState.values.count
+                    crawl: formState.values.correction,
+                    count: formState.values.count
                 },
                 {
                     headers: {
@@ -227,7 +224,7 @@ const AddText = props => {
                     {createState === true ? (
                         <div className={classes.gridCenter}>
                             <Typography className={(classes.title, classes.gridCenter)} variant="h1">
-                                Text Added. System Working. Please wait ... We Redirect you.
+                                Authorr Added. System Working. Please wait ... We Redirect you.
                             </Typography>
                         </div>
                     ) : (

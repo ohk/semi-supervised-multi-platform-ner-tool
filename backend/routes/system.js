@@ -200,7 +200,6 @@ router.post('/addAuthor', verify, async (req, res) => {
                 authorid = result.id
                 crawlFunc(req.body.mainurl, authorid)
             }
-
             res.status(200).send(result)
         } else {
             res.status(401).send('Only for admin')

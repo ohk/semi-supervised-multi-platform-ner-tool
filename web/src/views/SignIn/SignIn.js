@@ -5,7 +5,7 @@ import validate from 'validate.js'
 import { makeStyles } from '@material-ui/styles'
 import { Grid, Button, TextField, Link, Typography } from '@material-ui/core'
 import axios from 'axios'
-
+import ReCAPTCHA from 'react-google-recaptcha'
 import MuiAlert from '@material-ui/lab/Alert'
 
 function Alert(props) {
@@ -29,6 +29,10 @@ const schema = {
 }
 
 const useStyles = makeStyles(theme => ({
+    captcha: {
+        'padding-top': '20px',
+        display: 'none'
+    },
     root: {
         backgroundColor: theme.palette.background.default,
         height: '100%'
@@ -187,8 +191,14 @@ const SignIn = props => {
             })
     }
 
+    /***
+     * only for testing
+     */
+    const [recaptchaState, setRecaptchaState] = useState(true)
     const hasError = field => (formState.touched[field] && formState.errors[field] ? true : false)
-
+    const recaptcha = value => {
+        value !== null ? setRecaptchaState(true) : setRecaptchaState(false)
+    }
     return (
         <div className={classes.root}>
             <Grid className={classes.grid} container>
@@ -233,10 +243,14 @@ const SignIn = props => {
                                     value={formState.values.password || ''}
                                     variant="outlined"
                                 />
+                                <div className={classes.captcha}>
+                                    <ReCAPTCHA sitekey={global.config.GOOGLE_RECAPTCHA_KEY} onChange={recaptcha} />
+                                </div>
+
                                 <Button
                                     className={classes.signInButton}
                                     color="primary"
-                                    disabled={!formState.isValid}
+                                    disabled={!formState.isValid || recaptchaState !== true}
                                     fullWidth
                                     size="large"
                                     type="submit"
