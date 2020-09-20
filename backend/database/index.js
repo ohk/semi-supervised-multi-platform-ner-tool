@@ -6,7 +6,7 @@ const Settings = require('./Settings')
 const Tag = require('./Tag')
 const Train = require('./Train')
 const Dashboard = require('./Dashboard')
-
+const Rules = require('./Rules')
 module.exports = {
     User,
     Author,
@@ -15,5 +15,6 @@ module.exports = {
     Settings,
     Tag,
     Train,
-    Dashboard
+    Dashboard,
+    Rules
 }

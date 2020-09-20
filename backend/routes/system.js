@@ -5,6 +5,7 @@ const crawler = require('turkish-columnist-crawler')
 const { server } = require('../ner/index')
 const path = require('path')
 const serverB = require('../ner/index.js')
+const fs = require('fs')
 router.get('/getUsers', verify, async (req, res) => {
     try {
         isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
@@ -139,10 +140,49 @@ router.get('/getTrainExcludes', verify, async (req, res) => {
     }
 })
 
-crawlFunc = async (mainurl, authorid) => {
+addWords = async (textid, content) => {
     try {
+        server.post(content, async (err, res) => {
+            var tags = []
+            const tagtypes = await DB.Tag.listAllTag()
+            for (let i = 0; i < res.tags.length; i++) {
+                if (typeof res.tags[i].tag == 'string') {
+                    const tagid = tagtypes.data.find((x) => x.tagname === res.tags[i].tag).tagtypeid
+                    res.tags[i].tag !== tagtypes.data.find((x) => x.tagtypeid === tagid).tagname
+                        ? console.log(
+                              res.tags[i].word,
+                              res.tags[i].tag,
+                              tagid,
+                              tagtypes.data.find((x) => x.tagname === res.tags[i].tag).tagtypeid
+                          )
+                        : null
+                    wordR = await DB.Word.add({
+                        textID: textid,
+                        word: res.tags[i].word
+                    })
+                    const tmp = {}
+                    tmp['tagtypeid'] = tagid
+                    tmp['wordid'] = wordR.id
+                    tags.push(tmp)
+                }
+            }
+            var records = {
+                userID: 1,
+                tags
+            }
+            result = await DB.Tag.addRecord(records)
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+crawlFunc = async (mainurl, authorid, limit) => {
+    try {
+        limit === null || limit === undefined || typeof limit !== 'number' ? (limit = 100) : null
+        limit >= 100 ? (limit = 100) : null
         data = await crawler(mainurl, {
-            limit: -1,
+            limit: limit,
             externalParams: { userid: 1, authorid: authorid },
             saveDisk: true,
             filePath: path.join(__dirname, './texts/system'),
@@ -159,30 +199,7 @@ crawlFunc = async (mainurl, authorid) => {
                     type: 0
                 })
                 textid = text.id
-                server.post(data[i].content, async (err, res) => {
-                    var tags = []
-                    for (let i = 0; i < res.tags.length; i++) {
-                        if (typeof res.tags[i].tag == 'string') {
-                            word = res.tags[i].word
-                            tag = await DB.Tag.getTagTypeID({
-                                tagname: res.tags[i].tag
-                            })
-                            wordR = await DB.Word.add({
-                                textID: textid,
-                                word
-                            })
-                            tmp = {}
-                            tmp['tagtypeid'] = tag.id
-                            tmp['wordid'] = wordR.id
-                            tags.push(tmp)
-                        }
-                    }
-                    var records = {
-                        userID: 1,
-                        tags
-                    }
-                    result = await DB.Tag.addRecord(records)
-                })
+                addWords(textid, data[i].content)
             } catch (error) {
                 console.log(error)
             }
@@ -191,14 +208,15 @@ crawlFunc = async (mainurl, authorid) => {
         console.log(error)
     }
 }
+
 router.post('/addAuthor', verify, async (req, res) => {
     try {
         isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
         if (isUserAdmin.status === true) {
             result = await DB.Author.add(req.body)
-            if (req.body.crawl === true) {
+            if (req.body.crawl === true && result.status === true) {
                 authorid = result.id
-                crawlFunc(req.body.mainurl, authorid)
+                crawlFunc(req.body.mainurl, authorid, req.body.limit)
             }
             res.status(200).send(result)
         } else {
@@ -208,6 +226,7 @@ router.post('/addAuthor', verify, async (req, res) => {
         res.status(400).send({ status: false, error: error })
     }
 })
+
 router.post('/blockAuthor', verify, async (req, res) => {
     try {
         isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
@@ -403,12 +422,71 @@ router.post('/editTagType', verify, async (req, res) => {
     try {
         isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
         if (isUserAdmin.status === true) {
-            console.log(req.body)
             result = await DB.Tag.editTag(req.body)
             res.status(200).send(result)
         } else {
             res.status(401).send('Only for admin')
         }
+    } catch (error) {
+        console.log(error)
+        res.status(400).send({ status: false, error: error })
+    }
+})
+
+router.post('/addRule', verify, async (req, res) => {
+    try {
+        isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
+        if (isUserAdmin.status === true) {
+            result = await DB.Rules.add(req.body)
+            res.status(200).send(result)
+        } else {
+            res.status(401).send('Only for admin')
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(400).send({ status: false, error: error })
+    }
+})
+
+router.post('/updateRule', verify, async (req, res) => {
+    try {
+        isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
+        if (isUserAdmin.status === true) {
+            result = await DB.Rules.update(req.body)
+            res.status(200).send(result)
+        } else {
+            res.status(401).send('Only for admin')
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(400).send({ status: false, error: error })
+    }
+})
+
+router.post('/deleteRule', verify, async (req, res) => {
+    try {
+        isUserAdmin = await DB.User.isUserAdmin({ id: req.userid.id })
+        if (isUserAdmin.status === true) {
+            result = await DB.Rules.remove(req.body)
+            res.status(200).send(result)
+        } else {
+            res.status(401).send('Only for admin')
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(400).send({ status: false, error: error })
+    }
+})
+
+router.get('/listRules', async (req, res) => {
+    try {
+        data = {
+            filter: req.query.tagtypeid > 0,
+            tagtypeid: req.query.tagtypeid || -1
+        }
+        console.log(data)
+        result = await DB.Rules.list(data)
+        res.status(200).send(result)
     } catch (error) {
         console.log(error)
         res.status(400).send({ status: false, error: error })

@@ -105,15 +105,14 @@ CREATE TABLE IF NOT EXISTS author (
   textCount INT DEFAUlT 0,
   crawl BOOLEAN DEFAULT 'true',
   PRIMARY KEY (authorID));
-
-
+  
 -- -----------------------------------------------------
 -- Table `mydb`.`text`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS text (
   textID uuid DEFAULT uuid_generate_v4 (),
-  subURL VARCHAR(128),
-  path VARCHAR(128) NOT NULL,
+  subURL VARCHAR,
+  path VARCHAR NOT NULL,
   userID INT DEFAULT 1,
   createdAt TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   title VARCHAR,
@@ -128,7 +127,7 @@ CREATE TABLE IF NOT EXISTS text (
   CONSTRAINT author
     FOREIGN KEY (authorID)
     REFERENCES author (authorID)
-    ON DELETE SET DEFAULT
+    ON DELETE CASCADE
     ON UPDATE CASCADE);
 
 
@@ -158,6 +157,19 @@ CREATE TABLE IF NOT EXISTS tagType (
   color VARCHAR(45) UNIQUE,
   PRIMARY KEY (tagTypeID));
 
+-- -----------------------------------------------------
+-- Table `mydb`.`rules`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS rules (
+  ruleID SERIAL NOT NULL,
+  ruleText VARCHAR NOT NULL,
+  tagtypeID INT NOT NULL,
+  PRIMARY KEY (ruleID),
+  CONSTRAINT tagtypeID
+    FOREIGN KEY (tagtypeID)
+    REFERENCES tagType (tagTypeID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
 
 -- -----------------------------------------------------
 -- Table `mydb`.`tagRecord`
@@ -242,10 +254,17 @@ CREATE TRIGGER newTrainRecord AFTER INSERT ON nerTrainRecord
 
 
 CREATE FUNCTION update_tagCount() RETURNS trigger AS $update_tagCount$
+	DECLARE
+	systemTag INT;
     BEGIN
 		IF(TG_OP = 'DELETE') THEN
 			UPDATE tagCount SET count = count - 1 WHERE new.wordID = wordID AND new.tagTypeID = tagTypeID;
 		ELSE
+			IF((SELECT COUNT(*) FROM tagRecord WHERE wordID = new.wordID) = 2) THEN
+				SELECT tagtypeID INTO systemTag FROM tagRecord WHERE userID = 1 AND wordID = new.wordID;
+				UPDATE tagCount SET count = count - 1 
+					WHERE tagTypeID = systemTag AND wordID = new.wordID;
+			END IF;
 			IF((SELECT COUNT(*) FROM tagCount WHERE wordID = new.wordID AND tagTypeID = new.tagTypeID) < 1) THEN
 				INSERT INTO tagCount (wordid, tagtypeid, count)
 				VALUES (new.wordid, new.tagtypeid, 1);

@@ -7,6 +7,11 @@ addRecord = async (data) => {
         if (typeof data.tags === 'string') {
             data.tags = JSON.parse(data.tags)
         }
+        await conneciton.query({
+            text: 'UPDATE text SET tagcount=tagcount+1 WHERE textid= $1',
+            values: [data.textid]
+        })
+
         for (let i = 0; i < data.tags.length; i++) {
             try {
                 const query = {
@@ -24,26 +29,24 @@ addRecord = async (data) => {
                 text: 'UPDATE users SET textcount=textcount+1 WHERE userid = $1',
                 values: [data.userID]
             })
-            await conneciton.query({
-                text: 'UPDATE text SET tagcount=tagcount+1 WHERE textid= $1',
-                values: [data.textid]
-            })
-            const value = await conneciton.query({
-                text: "UPDATE setting SET value = value + 1 WHERE key='last_train_count' RETURNING value"
-            })
-            const count = await conneciton.query({
-                text: "SELECT value FROM setting WHERE key='train_count'"
-            })
-            if (value.rows[0].value > count.rows[0].value) {
-                const emails = await conneciton.query({
-                    text: 'SELECT email FROM users WHERE role=0 AND userid!=1'
+            if (data.userID !== 1) {
+                const value = await conneciton.query({
+                    text: "UPDATE setting SET value = value + 1 WHERE key='last_train_count' RETURNING value"
                 })
-                for (let i = 0; i < emails.rows.length; i++) {
-                    await Email.notificationCount(emails.rows[i].email)
+                const count = await conneciton.query({
+                    text: "SELECT value FROM setting WHERE key='train_count'"
+                })
+                if (value.rows[0].value > count.rows[0].value) {
+                    const emails = await conneciton.query({
+                        text: 'SELECT email FROM users WHERE role=0 AND userid!=1'
+                    })
+                    for (let i = 0; i < emails.rows.length; i++) {
+                        await Email.notificationCount(emails.rows[i].email)
+                    }
+                    const value2 = await conneciton.query({
+                        text: "UPDATE setting SET value = 0 WHERE key='last_train_count' RETURNING value"
+                    })
                 }
-                const value2 = await conneciton.query({
-                    text: "UPDATE setting SET value = 0 WHERE key='last_train_count' RETURNING value"
-                })
             }
         } catch (error) {
             status = false
@@ -144,6 +147,24 @@ listTagTypes = async (data) => {
     }
 }
 
+listAllTag = async () => {
+    try {
+        var conneciton = pool.getPool()
+        const query = {
+            text: 'SELECT * FROM tagtype ORDER BY tagtypeid ASC'
+        }
+        type = await conneciton.query(query)
+
+        if (type.rowCount != 0) {
+            return { status: true, data: type.rows }
+        } else {
+            return { status: false, data: [], message: 'Query error, please try again' }
+        }
+    } catch (error) {
+        return { status: false, message: error.message }
+    }
+}
+
 editTag = async (data) => {
     try {
         var conneciton = pool.getPool()
@@ -167,5 +188,6 @@ module.exports = {
     addTagType,
     getTextTag,
     listTagTypes,
-    editTag
+    editTag,
+    listAllTag
 }

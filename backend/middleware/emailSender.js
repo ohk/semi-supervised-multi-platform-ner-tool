@@ -44,7 +44,7 @@ notificationCount = async (emailAddress) => {
         from: `"${EMAIL_NAME}" <${EMAIL_USERNAME}>`,
         to: emailAddress,
         subject: 'Train System',
-        text: 'Sistem Eğitilebilir durumda.'
+        text: 'Sistem eğitilebilir durumda.'
     })
 }
 

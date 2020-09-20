@@ -181,7 +181,7 @@ const AddText = props => {
                     authorname: formState.values.authorname,
                     category: formState.values.category,
                     crawl: formState.values.correction,
-                    count: formState.values.count
+                    limit: formState.values.count
                 },
                 {
                     headers: {
@@ -224,7 +224,7 @@ const AddText = props => {
                     {createState === true ? (
                         <div className={classes.gridCenter}>
                             <Typography className={(classes.title, classes.gridCenter)} variant="h1">
-                                Authorr Added. System Working. Please wait ... We Redirect you.
+                                Author Added. System Working. Please wait ... We Redirect you.
                             </Typography>
                         </div>
                     ) : (

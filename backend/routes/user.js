@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const DB = require('../database/index')
 const validate = require('../validation/userV')
+const verify = require('../middleware/verify')
 
 var getDevice = function (ua) {
     var $ = { active: false, subactive: false }
@@ -162,6 +163,20 @@ router.post('/reset', async (req, res) => {
         res.status(400).send('Error: ' + error)
     }
 })
+
+router.post('/change', verify, async (req, res) => {
+    try {
+        var result = await DB.User.change({ id: req.userid.id, password: req.body.password })
+        if (result.status === true) {
+            return res.status(200).send(result.message)
+        } else {
+            return res.status(400).send(result.message)
+        }
+    } catch (error) {
+        res.status(400).send('Error: ' + error)
+    }
+})
+
 router.post('/forgot', async (req, res) => {
     try {
         var result = await DB.User.forgot(req.body)

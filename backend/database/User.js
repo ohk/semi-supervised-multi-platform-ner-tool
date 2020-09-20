@@ -214,6 +214,26 @@ reset = async (data) => {
     }
 }
 
+change = async (data) => {
+    try {
+        var conneciton = await pool.getPool()
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(data.password.toString(), salt)
+        const updateQuery = {
+            text: 'UPDATE users SET password = $1 WHERE userid = $2',
+            values: [hashedPassword, data.id]
+        }
+        updatePass = await conneciton.query(updateQuery)
+        if (updatePass.rowCount == 1) {
+            return { status: true, message: 'Password is successfully updated' }
+        } else {
+            return { status: false, message: 'Password update failed' }
+        }
+    } catch (error) {
+        return { status: false, message: error }
+    }
+}
+
 validate = async (data) => {
     try {
         var conneciton = await pool.getPool()
@@ -389,5 +409,6 @@ module.exports = {
     list,
     blockUser,
     makeAdmin,
-    makeUser
+    makeUser,
+    change
 }
