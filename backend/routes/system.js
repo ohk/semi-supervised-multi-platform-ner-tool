@@ -140,6 +140,15 @@ router.get('/getTrainExcludes', verify, async (req, res) => {
     }
 })
 
+router.get('/listAllTags', async (req, res) => {
+    try {
+        result = await DB.Tag.listAllTag()
+        res.status(200).send({ status: true, data: result })
+    } catch (error) {
+        res.status(400).send({ status: false, error: error })
+    }
+})
+
 addWords = async (textid, content) => {
     try {
         server.post(content, async (err, res) => {

@@ -180,9 +180,9 @@ const SignIn = props => {
                 if (response.status === 200) {
                     const token = response.data.token
                     const isAdmin = response.data.isAdmin
-                    history.push('/dashboard')
                     localStorage.setItem('token', token)
                     localStorage.setItem('isAdmin', isAdmin)
+                    history.push('/dashboard')
                     setErrorState(false)
                 }
             })

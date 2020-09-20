@@ -53,14 +53,14 @@ list = async (data) => {
             case true:
                 list = {
                     text:
-                        'SELECT r.ruleid,r.ruletext,t.tagalias,t.color FROM rules r, tagtype t WHERE t.tagtypeID = r.tagtypeID AND r.tagtypeID =$1  ORDER BY ruleid ASC',
+                        'SELECT r.ruleid,r.ruletext,t.tagalias,t.color,t.tagtypeid FROM rules r, tagtype t WHERE t.tagtypeID = r.tagtypeID AND r.tagtypeID =$1  ORDER BY ruleid ASC',
                     values: [data.tagtypeid]
                 }
                 break
             default:
                 list = {
                     text:
-                        'SELECT r.ruleid,r.ruletext,t.tagalias,t.color FROM rules r, tagtype t WHERE t.tagtypeID = r.tagtypeID ORDER BY ruleid ASC'
+                        'SELECT r.ruleid,r.ruletext,t.tagalias,t.color,t.tagtypeid FROM rules r, tagtype t WHERE t.tagtypeID = r.tagtypeID ORDER BY ruleid ASC'
                 }
                 break
         }
