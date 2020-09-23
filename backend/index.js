@@ -11,6 +11,43 @@ var useragent = require('express-useragent')
 const expressip = require('express-ip')
 const helmet = require('helmet')
 const { PORT } = require('./config')
+
+addWords = async (textid, content) => {
+    try {
+        server.post(content, async (err, res) => {
+            var tags = []
+            const tagtypes = await DB.Tag.listAllTag()
+            for (let i = 0; i < res.tags.length; i++) {
+                if (typeof res.tags[i].tag == 'string') {
+                    const tagid = tagtypes.data.find((x) => x.tagname === res.tags[i].tag).tagtypeid
+                    res.tags[i].tag !== tagtypes.data.find((x) => x.tagtypeid === tagid).tagname
+                        ? console.log(
+                              res.tags[i].word,
+                              res.tags[i].tag,
+                              tagid,
+                              tagtypes.data.find((x) => x.tagname === res.tags[i].tag).tagtypeid
+                          )
+                        : null
+                    wordR = await DB.Word.add({
+                        textID: textid,
+                        word: res.tags[i].word
+                    })
+                    const tmp = {}
+                    tmp['tagtypeid'] = tagid
+                    tmp['wordid'] = wordR.id
+                    tags.push(tmp)
+                }
+            }
+            var records = {
+                userID: 1,
+                tags
+            }
+            result = await DB.Tag.addRecord(records)
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
 /**
  * ITS crawl everyday
  */
@@ -37,30 +74,7 @@ schedule.scheduleJob('0 10 * * *', async () => {
                         type: 0
                     })
                     textid = text.id
-                    server.post(data[0].content, async (err, res) => {
-                        var tags = []
-                        for (let i = 0; i < res.tags.length; i++) {
-                            if (typeof res.tags[i].tag == 'string') {
-                                word = res.tags[i].word
-                                tag = await DB.Tag.getTagTypeID({
-                                    tagname: res.tags[i].tag
-                                })
-                                wordR = await DB.Word.add({
-                                    textID: textid,
-                                    word
-                                })
-                                tmp = {}
-                                tmp['tagtypeid'] = tag.id
-                                tmp['wordid'] = wordR.id
-                                tags.push(tmp)
-                            }
-                        }
-                        var records = {
-                            userID: 1,
-                            tags
-                        }
-                        result = await DB.Tag.addRecord(records)
-                    })
+                    addWords(textid, data[0].content)
                 } catch (error) {}
             }
         }
