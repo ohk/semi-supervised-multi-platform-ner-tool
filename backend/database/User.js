@@ -153,12 +153,12 @@ forgot = async (data) => {
         if (check.rows.length != 0) {
             userID = check.rows[0].userid
             const isExistQuery = {
-                text: 'SELECT * FROM forgotpassword WHERE userid = $1 AND status = 0',
+                text: 'SELECT * FROM forgotpassword WHERE userid = $1 AND status = 1',
                 values: [userID]
             }
             isExist = await conneciton.query(isExistQuery)
             if (isExist.rows.length == 0) {
-                hashedKey = jwt.sign({ id: userID }, TOKEN_SECRET)
+                hashedKey = jwt.sign({ id: userID, random: Math.random()*10000 }, TOKEN_SECRET)
                 const createHashQuery = {
                     text: 'INSERT INTO forgotpassword(hashedkey, userid) VALUES($1,$2)',
                     values: [hashedKey, userID]
@@ -167,14 +167,15 @@ forgot = async (data) => {
                 await Email.forgotPasswordMail(check.rows[0].email, hashedKey)
                 return { status: true, key: hashedKey, message: 'Data confirmed' }
             } else {
-                await Email.forgotPasswordMail(check.rows[0].email, isExist.rows[0].hashedKey)
+                await Email.forgotPasswordMail(check.rows[0].email, isExist.rows[0].hashedkey)
                 return { status: true, key: isExist.rows[0].hashedKey, message: 'Data confirmed' }
             }
         } else {
             return { status: false, message: 'Login credentials are incorrect' }
         }
     } catch (error) {
-        return { status: false, message: error }
+        console.log(error)
+        return { status: false, message: 'Critical error' }
     }
 }
 
