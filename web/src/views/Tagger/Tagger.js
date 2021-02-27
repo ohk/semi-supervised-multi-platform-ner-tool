@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/styles'
-import { Button } from '@material-ui/core'
+import { Button,Link } from '@material-ui/core'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import axios from 'axios'
+import { Link as RouterLink } from 'react-router-dom'
+import { saveAs } from 'file-saver';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -12,6 +14,15 @@ const useStyles = makeStyles(theme => ({
     button: {
         marginRight: theme.spacing(1),
         float: 'right'
+    },
+    row: {
+        height: '42px',
+        display: 'flex',
+        alignItems: 'center',
+        marginTop: theme.spacing(1)
+    },
+    spacer: {
+        flexGrow: 1
     }
 }))
 
@@ -68,8 +79,22 @@ const Tagger = props => {
     const handleClick = e => {
         const typeID = e.target.getAttribute('id')
         const wordid = e.target.parentNode.parentNode.getAttribute('id')
-        console.log(typeID, wordid)
         updateState(typeID, wordid)
+    }
+
+    const exportData = () => {
+        const exportObj = {
+            tagTypes: types,
+            data: tags,
+        }
+        const fileName = props.location.pathname.replace('/text/','')
+        const fileToSave = new Blob([JSON.stringify(exportObj)], {
+            type: 'application/json',
+            name: fileName
+        });
+        
+        // Save the file
+        saveAs(fileToSave, fileName);
     }
 
     const saveClick = e => {
@@ -102,12 +127,17 @@ const Tagger = props => {
                 setMes(error.response.data.message)
             })
     }
-    if (types.length > 0) {
-        console.log(types[1].color)
-    }
-    console.log(types)
+
     return (
         <div className={classes.root}>
+             <div className={classes.row}>
+                        <span className={classes.spacer} />
+                        <Link component={RouterLink} onClick={exportData} variant="h6">
+                            <Button color="primary" variant="contained">
+                                Export
+                            </Button>
+                        </Link>
+                    </div>
             {op === 0 ? (
                 types.length > 0 && tags.length > 0 ? (
                     <div className="entities">
