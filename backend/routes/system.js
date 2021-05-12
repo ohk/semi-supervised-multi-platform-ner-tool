@@ -155,24 +155,28 @@ addWords = async (textid, content) => {
             var tags = []
             const tagtypes = await DB.Tag.listAllTag()
             for (let i = 0; i < res.tags.length; i++) {
-                if (typeof res.tags[i].tag == 'string') {
-                    const tagid = tagtypes.data.find((x) => x.tagname === res.tags[i].tag).tagtypeid
-                    res.tags[i].tag !== tagtypes.data.find((x) => x.tagtypeid === tagid).tagname
-                        ? console.log(
-                              res.tags[i].word,
-                              res.tags[i].tag,
-                              tagid,
-                              tagtypes.data.find((x) => x.tagname === res.tags[i].tag).tagtypeid
-                          )
-                        : null
-                    wordR = await DB.Word.add({
-                        textID: textid,
-                        word: res.tags[i].word
-                    })
-                    const tmp = {}
-                    tmp['tagtypeid'] = tagid
-                    tmp['wordid'] = wordR.id
-                    tags.push(tmp)
+                try {
+                    if (typeof res.tags[i].tag == 'string') {
+                        const tagid = tagtypes.data.find((x) => x.tagname === res.tags[i].tag).tagtypeid
+                        res.tags[i].tag !== tagtypes.data.find((x) => x.tagtypeid === tagid).tagname
+                            ? console.log(
+                                  res.tags[i].word,
+                                  res.tags[i].tag,
+                                  tagid,
+                                  tagtypes.data.find((x) => x.tagname === res.tags[i].tag).tagtypeid
+                              )
+                            : null
+                        wordR = await DB.Word.add({
+                            textID: textid,
+                            word: res.tags[i].word
+                        })
+                        const tmp = {}
+                        tmp['tagtypeid'] = tagid
+                        tmp['wordid'] = wordR.id
+                        tags.push(tmp)
+                    }
+                } catch (error) {
+                    console.log(error)
                 }
             }
             var records = {
